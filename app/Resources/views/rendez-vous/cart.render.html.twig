@@ -1,0 +1,84 @@
+{% if cart != null %}
+<div id="top-cart">
+    <a href="#" id="top-cart-trigger" style="width: 32px">
+        {% if cart.remoteMode == true %}
+            <img src="{{ asset('images/skype-icon-black.png') }}" style="width: 46px"/>
+        {% else %}
+            <img src="{{ asset('images/interview-icon-black.png') }}" style="width: 46px"/>
+        {% endif %}
+        {% if cart != null %}
+            <span>1</span>
+        {% endif %}
+    </a>
+    <div class="top-cart-content">
+        <div class="top-cart-title">
+            <h4>Votre rendez-vous</h4>
+        </div>
+        {% if cart != null %}
+            <div class="top-cart-items">
+                {% if cart.service != null %}
+                <div class="top-cart-item clearfix">
+                    <div class="top-cart-item-image">
+                        <a href="#"><img src="{{ asset('images/services/' ~ cart.service.image) }}" alt="{{ cart.service.name }}" /></a>
+                    </div>
+                    <div class="top-cart-item-desc" style="height: 42px;">
+                        <p>
+                            <a href="#">{{ cart.service.name }}</a>
+                            <br/>
+                            <span class="top-cart-item-quantity" style="position: relative;">{{ cart.lengthForClient}} heure</span>
+                        </p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="top-cart-item clearfix text-center">
+                    <em>En attente du choix du service</em>
+                </div>
+                {% endif %}
+                {% if cart.appointment != null %}
+                <div class="top-cart-item clearfix">
+                    <div class="">
+                        {{ cart.appointment|localizeddate('medium', 'none', null, null, 'EEEE') }}
+                    </div>
+                    <div class="top-cart-item-desc">
+                        {{ cart.appointment|localizeddate('medium', 'none', null, null, 'dd LLLL Y') }}
+                        <span class="top-cart-item-quantity">{{ cart.appointment|localizeddate('medium', 'none', null, null, 'HH:mm') }}</span>
+                    </div>
+                </div>
+                {% else %}
+                    <div class="top-cart-item clearfix text-center">
+                        <em>En attente du choix de l'horaire</em>
+                    </div>
+                {% endif %}
+                {% if cart.payment != null %}
+                <div class="top-cart-item clearfix">
+                    <div class="fbox-icon top-cart-item-image">
+                        <i class="{{ constant('AppBundle\\Entity\\Cart::PAYMENT_MODES')[cart.payment]['icon'] }}" style="zoom: 2; margin-left: 5px;"></i>
+                    </div>
+                    <div class="top-cart-item-desc">
+                        <a href="#">{{ constant('AppBundle\\Entity\\Cart::PAYMENT_MODES')[cart.payment]['label'] }}</a>
+                        <span class="top-cart-item-price">Moyen de paiement</span>
+                    </div>
+                </div>
+                {% else %}
+                    <div class="top-cart-item clearfix text-center">
+                        <em>En attente du choix de moyen de paiement</em>
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if cart.service != null %}
+                <div class="top-cart-item clearfix text-center">
+                    <span class="top-cart-item-price"><strong style="font-size: 1.25em;">{{ cart.service.price }}€</strong></span>
+                </div>
+            {% endif %}
+            <div class="top-cart-item clearfix">
+                <form class="" method="post" enctype='multipart/form-data' action="{{ back_link }}">
+                        <button type="submit" class="add-to-cart button center-block" style="display: block !important; margin: auto !important;">Reprendre la réservation</button>
+
+                </form><!-- Product Single - Quantity & Cart Button End -->
+            </div>
+        <div class="bottommargin-sm"><span class="center-block text-center" style="width: 150px;"><a href="{{ path('rendez_vous_supprimer_commande') }}"><small>Annuler mon rendez-vous</small></a></span></div>
+    </div>
+    {% endif %}
+</div><!-- #top-cart end -->
+{% endif %}

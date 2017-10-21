@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block slider %}
+    <section id="slider" class="boxed-slider">
+        <div class="container clearfix">
+            <div id="oc-slider" class="owl-carousel carousel-widget" data-margin="0" data-items="1" data-animate-in="fadeIn" data-speed="450" data-animate-out="fadeOut">
+                <a href="#"><img src="{{ asset('images/slider/intro/1.jpg') }}" alt="Slider"></a>
+                <a href="#"><img src="{{ asset('images/slider/intro/2.jpg') }}" alt="Slider"></a>
+                <a href="#"><img src="{{ asset('images/slider/intro/3.jpg') }}" alt="Slider"></a>
+                <a href="#"><img src="{{ asset('images/slider/intro/4.jpg') }}" alt="Slider"></a>
+                <a href="#"><img src="{{ asset('images/slider/intro/5.jpg') }}" alt="Slider"></a>
+                <a href="#"><img src="{{ asset('images/slider/intro/6.jpg') }}" alt="Slider"></a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block content %}
+    {# INTRO #}
+    <div class="section header-stick">
+        <div class="container clearfix">
+            <div class="row">
+
+                <div class="col-md-9">
+                    <div class="heading-block bottommargin-sm">
+                        <h3>Steve David, praticien en thérapie holistique</h3>
+                    </div>
+
+                    <p class="nobottommargin">Vous êtes actuellement sur mon site où je présente mes services en matière de thérapie holistique. Un blog personnel est également consultable en ligne. Si vous êtes intéressé, n'hésitez pas à réserver un rendez-vous. Pour mes consultants actuels, un espace personnel est à votre disposition.</p>
+                </div>
+
+                <div class="col-md-3">
+                    <img src="{{ asset('images/steve.jpg') }}"/>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    {# APERCU DES CATEGORIES DE SERVICES #}
+    <div class="container clearfix">
+
+            {% for category in categories %}
+                <a href="{{ path('service_category', {slug: category.slug}) }}">
+                        <div class="col_one_third nobottommargin {% if loop.last %}col_last{% endif %}">
+                        <div class="feature-box media-box">
+                            <div class="fbox-media">
+                                <img src="{{ asset('images/categories/' ~ category.imageFilename) }}" alt="Why choose Us?">
+                                <div class="overlay"><div class="overlay-wrap"><i class="icon-zoom-in2"></i></div></div>
+                            </div>
+                            <div class="fbox-desc">
+                                <h3>{{ category.name }}<span class="subtitle">{{ category.subtitle }}</span></h3>
+                                <p>{{ category.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+
+        <div class="clear"></div>
+
+    </div>
+
+
+    {# CITATION PARALLAX #}
+    <div class="section parallax bottommargin-lg" style="background-image: url('{{ asset('images/soleil_marseille.jpg') }}'); padding: 100px 0;" data-stellar-background-ratio="0.3">
+        <div class="heading-block center nobottomborder nobottommargin">
+            <blockquote>
+                <p>La matière est en réalité une énergie dont la vibration a été ainsi réduite à être perceptible par les sens.</p>
+                <footer>Albert Einstein</footer>
+            </blockquote>
+        </div>
+    </div>
+
+    {# TEMOIGNAGES CLIENTS #}
+    <div class="section topmargin-sm footer-stick">
+
+        <h4 class="uppercase center">Leur <span>avis</span></h4>
+
+        <div class="fslider testimonial testimonial-full" data-animation="fade" data-arrows="false">
+            <div class="flexslider">
+                <div class="slider-wrap">
+                    <div class="slide">
+                        <div class="testi-content">
+                            <p>Une personne qui met en confiance [...]. En plus d'être à l'écoute, il est super efficace, compréhensif et pertinent. Beaucoup de talents, de dons très bien exploités. Un coeur ouvert et une douceur d'enfer.</p>
+                            <div class="testi-meta">
+                                Emilie
+                                <span>mai 2017</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <div class="testi-content">
+                            <p>Un thérapeute en or, extrêmement patient, à l'écoute et qui a cœur à vous aider. Je recommande fortement !</p>
+                            <div class="testi-meta">
+                                Anna-Maria
+                                <span>mai 2017</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <div class="testi-content">
+                            <p>C'est une personne très humaine, à l'écoute et qui sait trouver les bons mots pour répondre à nos quêtes intérieures. Je referai appel à lui sans hésiter !</p>
+                            <div class="testi-meta">
+                                Flora
+                                <span>mars 2017</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

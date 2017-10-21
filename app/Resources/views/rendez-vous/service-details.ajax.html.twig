@@ -1,0 +1,43 @@
+<div class="single-product shop-quick-view-ajax clearfix">
+
+    <div class="ajax-modal-title">
+        <h2>{{ service.name }}</h2>
+    </div>
+
+    <div class="product modal-padding clearfix">
+
+        <div class="col_half nobottommargin">
+            <div class="product-image">
+                <div class="fslider" data-pagi="false">
+                        <div class="slider-wrap">
+                            <div class="slide"><a href="{{ asset('images/services/' ~ service.image) }}" title="Pink Printed Dress - Front View"><img src="{{ asset('images/services/' ~ service.image) }}" alt="Pink Printed Dress"></a></div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="col_half nobottommargin col_last product-desc">
+            <div class="product-price"><ins>{{ service.price }}€</ins> / heure</div>
+            <div class="clear"></div>
+            <div class="line"></div>
+
+            <!-- Product Single - Quantity & Cart Button
+            ============================================= -->
+            <form class="cart nobottommargin clearfix" method="post" action="{{ path('rendez_vous_calendrier') }}">
+                <input type="hidden" name="idService" value="{{ service.id }}"/>
+                <input type="hidden" name="remoteMode" value="{{ cart.remoteMode }}"/>
+                <button type="submit" class="add-to-cart button nomargin">Choisir</button>
+            </form><!-- Product Single - Quantity & Cart Button End -->
+
+            <div class="clear"></div>
+            <div class="line"></div>
+            {{ service.shortDescription|raw }}
+            <div class="panel panel-default product-meta nobottommargin">
+                <div class="panel-body">
+                    <span class="posted_in">Categorie : {{ service.category.name }}.</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

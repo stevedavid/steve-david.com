@@ -1,0 +1,432 @@
+{% set controller_name = app.request.attributes.get("_controller")|split('::')[0]|split('\\')[2] %}
+{% set action_name = app.request.attributes.get("_controller")|split('::')[1] %}
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="SemiColonWeb" />
+
+    <!-- Stylesheets
+    ============================================= -->
+    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/dark.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/font-icons.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/animate.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/calendar.css') }}" type="text/css" />
+    <style>
+        .sticky-side-element {
+            position: fixed;
+            top: 50%;
+            margin-top: -24px;
+            left: auto;
+            right: -54px;
+            height: 48px;
+            line-height: 48px;
+            padding: 0 15px;
+            background-color: #EEE;
+            color: #222;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            -webkit-transform: rotate(270deg);
+            -ms-transform: rotate(270deg);
+            -o-transform: rotate(270deg);
+            transform: rotate(270deg);
+        }
+    </style>
+    {% block stylesheets %}{% endblock %}
+
+    <link rel="stylesheet" href="{{ asset('css/responsive.css') }}" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Document Title
+    ============================================= -->
+    <title>{% block title %}{% endblock %} / Steve DAVID - thérapeute holistique</title>
+
+    {% block recaptcha %}{% endblock %}
+</head>
+
+<body class="stretched">
+
+<div class="body-overlay"></div>
+<div id="side-panel"    class="dark">
+
+    <div id="side-panel-trigger-close" class="side-panel-trigger"><a href="#"><i class="icon-line-cross"></i></a></div>
+
+    <div class="side-panel-wrap">
+
+        <div class="widget quick-contact-widget clearfix">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="font-size: 0.9em;">Chat avec <span><a href="{{ path('qui-suis-je') }}">Steve David</a></span></h3>
+                </div>
+                <div class="panel-body" style="max-height: 300px; overflow-y: scroll;">
+                    <blockquote class="quote blockquote-reverse nobottommargin">
+                        <p style="margin-bottom: 0;">Bonjour Steve, je suis intéressé par vos services !</p>
+                        <footer>Visiteur</footer>
+                    </blockquote>
+                    <blockquote class="quote nobottommargin">
+                        <p style="margin-bottom: 0;">Bonjour ! Que voulez-vous savoir ?</p>
+                        <footer>Steve</footer>
+                    </blockquote>
+                    <blockquote class="quote blockquote-reverse nobottommargin">
+                        <p style="margin-bottom: 0;">Lorem ipsum dolor sit amet.</p>
+                        <footer>Visiteur</footer>
+                    </blockquote>
+                    <blockquote class="quote nobottommargin">
+                        <p style="margin-bottom: 0;">Aenean vehicula, urna non dapibus porta</p>
+                        <footer>Steve</footer>
+                    </blockquote>
+                    <blockquote class="quote blockquote-reverse nobottommargin">
+                        <p style="margin-bottom: 0;">Aliquam a est dapibus risus eleifend efficitur</p>
+                        <footer>Visiteur</footer>
+                    </blockquote>
+                    <blockquote class="quote nobottommargin">
+                        <p style="margin-bottom: 0;">In commodo massa a laoreet consectetur.</p>
+                        <footer>Steve</footer>
+                    </blockquote>
+                    <blockquote class="quote blockquote-reverse nobottommargin">
+                        <p style="margin-bottom: 0;">Curabitur lobortis, tortor quis tincidunt placerat, ligula ipsum ultricies tortor, in laoreet ligula nisi quis lorem.</p>
+                        <footer>Visiteur</footer>
+                    </blockquote>
+                </div>
+            </div><!-- Post Single - Author End -->
+            <form id="quick-contact-form" name="quick-contact-form" action="include/quickcontact.php" method="post" class="quick-contact-form nobottommargin">
+                <div class="form-process"></div>
+                <textarea class="required sm-form-control input-block-level short-textarea" style="min-height: 100%;" id="quick-contact-form-message" name="quick-contact-form-message" rows="4" cols="30" placeholder="Message"></textarea>
+                <button type="submit" id="quick-contact-form-submit" name="quick-contact-form-submit" class="button button-small button-3d nomargin" value="submit">Envoyer</button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Document Wrapper
+============================================= -->
+<div id="wrapper" class="clearfix">
+
+    {% if controller_name != 'RendezVousController' %}
+        <!-- Top Bar
+        ============================================= -->
+            <div id="top-bar">
+
+            <div class="container clearfix">
+
+                <div class="col_half nobottommargin">
+
+                    <!-- Top Links
+                    ============================================= -->
+                    <div class="top-links">
+                        <ul>
+                            <li class="{% if controller_name == 'IndexController' and action_name == 'indexAction' %}current{% endif %}"><a href="{{ path('accueil') }}">Accueil</a></li>
+                            {#<li class="{% if controller_name == 'IndexController' and action_name == 'quiSuisJeAction' %}current{% endif %}"><a href="{{ path('qui-suis-je') }}">Qui suis-je</a></li>#}
+                            <li class="{% if controller_name == 'IndexController' and action_name == 'contactAction' %}current{% endif %}"><a href="{{ path('contact') }}">Contact</a></li>
+                        </ul>
+                    </div><!-- .top-links end -->
+
+                </div>
+
+                <div class="col_half fright col_last nobottommargin">
+
+                    <!-- Top Social
+                    ============================================= -->
+                    <div id="top-social">
+                        <ul>
+                            <li><a href="http://www.facebook.com/steve.david.therapeute" target="_blank" class="si-facebook"><span class="ts-icon"><i class="icon-facebook"></i></span><span class="ts-text">Facebook</span></a></li>
+                            <li><a href="https://www.linkedin.com/in/stevedavid/" target="_blank" class="si-linkedin"><span class="ts-icon"><i class="icon-linkedin"></i></span><span class="ts-text">LinkedIn</span></a></li>
+                            <li><a href="https://www.youtube.com/channel/UC7dE37VYBNnooSjLI77IybQ" target="_blank" class="si-youtube"><span class="ts-icon"><i class="icon-youtube-play"></i></span><span class="ts-text">YouTube</span></a></li>
+                            <li><a href="tel:0781350383" class="si-call"><span class="ts-icon"><i class="icon-call"></i></span><span class="ts-text">0781-350-383</span></a></li>
+                            <li><a href="mailto:hello@steve-david.com" class="si-email3"><span class="ts-icon"><i class="icon-email3"></i></span><span class="ts-text">hello@steve-david.com</span></a></li>
+                        </ul>
+                    </div><!-- #top-social end -->
+
+                </div>
+
+            </div>
+
+        </div><!-- #top-bar end -->
+    {% endif %}
+    <!-- Header
+    ============================================= -->
+    <header id="header" class="sticky-style-3">
+
+        <div class="container clearfix">
+
+            <!-- Logo
+            ============================================= -->
+            <div id="logo">
+                <a href="{{ path('accueil') }}" class="standard-logo" data-dark-logo="images/logo-dark.png"><img src="{{ asset('images/logo.png') }}" alt="Canvas Logo"></a>
+                <a href="{{ path('accueil') }}" class="retina-logo" data-dark-logo="images/logo-dark@2x.png"><img src="{{ asset('images/logo@2x.png') }}" alt="Canvas Logo"></a>
+            </div><!-- #logo end -->
+
+            <ul class="header-extras">
+                <li>
+                    <i class="i-plain icon-email3 nomargin"></i>
+                    <div class="he-text">
+                        Ecrivez-moi
+                        <span>hello@steve-david.com</span>
+                    </div>
+                </li>
+                <li>
+                    <i class="i-plain icon-call nomargin"></i>
+                    <div class="he-text">
+                        Appelez-moi
+                        <span>0781-350-383</span>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+        <div id="header-wrap">
+
+            <!-- Primary Navigation
+            ============================================= -->
+            <nav id="primary-menu" class="style-2 sub-title">
+
+                <div class="container clearfix">
+
+                    <div id="primary-menu-trigger"><i class="icon-reorder"></i></div>
+
+                    <ul>
+                        <li class="{% if controller_name == 'ServiceController' %}current{% endif %} mega-menu"><a href="#"><div>Services</div><span>en thérapie holistique</span></a>
+                            <div class="mega-menu-content style-2 clearfix">
+                                {{ render(controller('AppBundle:Service:menu')) }}
+                            </div>
+                        </li>
+
+                        <li><a href="#"><div>Blogs</div><span>d'articles et vidéos</span></a>
+                            {{ render(controller('AppBundle:Blog:menu')) }}
+                        </li>
+                        <li id="choix_rdv" class="{% if controller_name == 'RendezVousController' %}current{% endif %} mega-menu"><a href="#"><div><i class="icon-calendar"></i> Prendre un rendez-vous</div><span>en ligne</span></a>
+                            <div class="mega-menu-content style-2 clearfix">
+                                <ul class="mega-menu-column col-md-6">
+                                    <li class="mega-menu-title text-center">
+                                        <a href="{{ path('rendez_vous_service') }}"><div>En face à face</div></a>
+                                        <div class="text-center">
+                                            <a href="{{ path('rendez_vous_service') }}"><img src="{{ asset('images/interview-icon.png') }}" style="width: 64px;"/></a>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <ul class="mega-menu-column col-md-6">
+                                    <li class="mega-menu-title text-center">
+                                        <a href="{{ path('rendez_vous_service', {distance: 1}) }}"><div>A distance</div></a>
+                                        <div class="text-center">
+                                            <a href="{{ path('rendez_vous_service', {distance: 1}) }}"><img src="{{ asset('images/skype-icon.png') }}" style="width: 64px;"/></a>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </li>
+                        {#
+                        <li class="mega-menu"><a href="#"><div><i class="icon-lock"></i> Espace personnel</div><span>sécurisé</span></a>
+                            <div class="mega-menu-content style-2 clearfix">
+
+                                <ul class="mega-menu-column col-md-4">
+                                    <li class="mega-menu-title"><a href="#"><div>Vos documents</div></a>
+                                        <ul>
+                                            <li><a href="#"><div>Factures</div></a></li>
+                                            <li><a href="#"><div>Documents</div></a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <ul class="mega-menu-column col-md-4">
+                                    <li class="mega-menu-title"><a href="#"><div>Vos rendez-vous</div></a>
+                                        <ul>
+                                            <li><a href="#"><div>Cette semaine</div></a></li>
+                                            <li><a href="#"><div>Ce mois-ci</div></a></li>
+                                            <li><a href="#"><div>Le mois dernier</div></a></li>
+                                            <li><a href="#"><div>Cette année</div></a></li>
+                                            <li><a href="#"><div>L'année dernière</div></a></li>
+                                            <li><a href="#"><div>Tous</div></a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <ul class="mega-menu-column col-md-4">
+                                    <li>
+                                        <div class="widget clearfix">
+
+                                            <h4>Connectez-vous</h4>
+
+                                            <form id="login-form" name="login-form" class="nobottommargin" action="#" method="post">
+
+                                                <div class="col_full">
+                                                    <label for="login-form-username">Votre adresse e-mail</label>
+                                                    <input type="text" id="login-form-username" name="login-form-username" value="" class="form-control" />
+                                                </div>
+
+                                                <div class="col_full">
+                                                    <label for="login-form-password">Votre mot de passe :</label>
+                                                    <input type="password" id="login-form-password" name="login-form-password" value="" class="form-control" />
+                                                </div>
+
+                                                <div class="col_full nobottommargin">
+                                                    <button class="button button-3d button-black nomargin" id="login-form-submit" name="login-form-submit" value="login">Connexion</button>
+                                                    <a href="#" class="fright">Mot de passe oublié ?</a>
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        #}
+                    </ul>
+                    {{ render(controller('AppBundle:RendezVous:cart')) }}
+                    {#
+                    <!-- Top Search
+                    ============================================= -->
+                    <div id="top-search">
+                        <a href="#" id="top-search-trigger"><i class="icon-search3"></i><i class="icon-line-cross"></i></a>
+                        <form action="search.html" method="get">
+                            <input type="text" name="q" class="form-control" value="" placeholder="Entrée pour lancer votre recherche">
+                        </form>
+                    </div><!-- #top-search end -->
+                    #}
+                </div>
+
+            </nav><!-- #primary-menu end -->
+
+        </div>
+
+    </header><!-- #header end -->
+
+
+    {% for message in app.flashes('success') %}
+    <div class="style-msg successmsg ">
+        <div class="sb-msg"><i class="icon-thumbs-up"></i><strong>Ok!</strong> {{ message }}</div>
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+    <div class="style-msg errormsg ">
+        <div class="sb-msg"><i class="icon-remove"></i><strong>Oops!</strong> {{ message }}</div>
+    </div>
+    {% endfor %}
+
+    {% for message in app.flashes('notice') %}
+    <div class="style-msg infomsg ">
+        <div class="sb-msg"><i class="icon-info-sign"></i><strong>Ahem!</strong> {{ message }}</div>
+    </div>
+    {% endfor %}
+
+    {% for message in app.flashes('alert') %}
+    <div class="style-msg alertmsg ">
+        <div class="sb-msg"><i class="icon-warning-sign"></i><strong>Heu..</strong> {{ message }}</div>
+    </div>
+    {% endfor %}
+
+    {% block page_title %}
+    {% endblock %}
+
+    {% block page_menu %}
+    {% endblock %}
+
+    {% block slider %}
+    {% endblock %}
+
+    <section id="content">
+        <div class="content-wrap">
+            {% block content %}{% endblock %}
+        </div>
+    </section>
+
+    <!-- Footer
+    ============================================= -->
+    <footer id="footer" class="dark">
+
+        {% if controller_name != 'RendezVousController' %}
+            {{ render(controller('AppBundle:Index:footer')) }}
+        {% endif %}
+        <!-- Copyrights
+        ============================================= -->
+        <div id="copyrights">
+
+            <div class="container clearfix">
+
+                <div class="col_half">
+                    Copyright &copy; 2017 Steve David - thérapeute holistique<br/> SIRET : 831 227 889 00019 / APE : 86.90F<br>
+                    {#<div class="copyright-links"><a href="#">Conditions générales de vente</a> / <a href="#">Mentions légales</a></div>#}
+                </div>
+
+                <div class="col_half col_last tright">
+                    <div class="fright clearfix">
+                        <a href="http://www.facebook.com/steve.david.therapeute" target="_blank" class="social-icon si-small si-borderless si-facebook">
+                            <i class="icon-facebook"></i>
+                            <i class="icon-facebook"></i>
+                        </a>
+
+                        <a href="https://www.linkedin.com/in/stevedavid/" target="_blank" class="social-icon si-small si-borderless si-linkedin">
+                            <i class="icon-linkedin"></i>
+                            <i class="icon-linkedin"></i>
+                        </a>
+                        <a href="https://www.youtube.com/channel/UC7dE37VYBNnooSjLI77IybQ" target="_blank" class="social-icon si-small si-borderless si-youtube">
+                            <i class="icon-youtube-play"></i>
+                            <i class="icon-youtube-play"></i>
+                        </a>
+                    </div>
+
+                    <div class="clear"></div>
+
+                    <i class="icon-envelope2"></i> hello@steve-david.com <span class="middot">&middot;</span> <i class="icon-headphones"></i> 0781-350-383 <span class="middot">&middot;</span> <i class="icon-skype2"></i> CaptainFeuillage
+                </div>
+
+            </div>
+
+        </div><!-- #copyrights end -->
+
+    </footer><!-- #footer end -->
+
+</div><!-- #wrapper end -->
+
+<!-- Go To Top
+============================================= -->
+<div id="gotoTop" class="icon-angle-up"></div>
+
+{#<a href="#" style="z-index: 100;" data-toggle="modal" data-target="#contactFormModal" class="sticky-side-element side-panel-trigger">Chat en direct</a>#}
+
+<!-- External JavaScripts
+============================================= -->
+<script type="text/javascript" src="{{ asset('js/jquery.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/plugins.js') }}"></script>
+
+<!-- Footer Scripts
+============================================= -->
+<script type="text/javascript" src="{{ asset('js/functions.js') }}"></script>
+
+<script>
+    jQuery(function($) {
+        $('a[href="#"]', 'a[href=""]').each(function() {
+            $(this).on('click', function(e) {
+                e.preventDefault();
+                alert('kikoo');
+            });
+        });
+
+        $('ul#choix_rdv').find('img').each(function(k, v) {
+             var src = $(v).attr('src');
+             var filename = src.split('.')[0];
+             var type = filename.split('_')[1];
+
+             $(v).hover(function() {
+                 $(this).attr('src', '{{ asset('images/interview_icon_black.png') }}')
+             }, function() {});
+        });
+    });
+</script>
+{% block javascripts %}{% endblock %}
+
+
+</body>
+</html>

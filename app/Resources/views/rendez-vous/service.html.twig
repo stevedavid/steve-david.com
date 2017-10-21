@@ -1,0 +1,77 @@
+{% extends '::base.html.twig' %}
+
+{% block cart %}
+    {{ render(controller('AppBundle:RendezVous:cart')) }}
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/custom_css.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/bs-switches.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/components/radio-checkbox.css') }}" type="text/css" />
+    <style>
+        .item-quick-view:hover button.btn-link {
+            color: white !important;
+            text-decoration: none;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}Prendre un rendez-vous (1/4){% endblock %}
+
+{% block page_title %}
+    {% include 'index/page_title.html.twig' with {
+    page_title: 'Prendre un rendez-vous',
+    page_subtitle: 'Vous êtes décidé ! Parfait ! Nous allons procéder par étape.',
+    steps: [{
+    name: 'Prendre un rendez-vous'
+    }, {
+    name: 'Choisissez un service'
+    }]
+    } %}
+{% endblock %}
+
+{% block content %}
+    <div class="container clearfix">
+        {% include 'rendez-vous/etapes.inc.html.twig' with {step: 1} %}
+        {% for category in categories %}
+            <div class="row entry clearfix">
+                <h3>{{ category.name }}</h3>
+                <div id="shop" class="shop product-3 clearfix">
+                    {% for service in category.services %}
+                        {% if service_a_distance == 1 and service.remoteMode == false %}
+                            &nbsp;
+                        {% else %}
+                            <div class="product clearfix">
+                                <div class="product-image">
+                                    <a href="#" class="product-lame"><img src="{{ asset('images/services/' ~ service.image) }}" alt="Checked Short Dress"></a>
+                                    <form method="post" action="{{ path('rendez_vous_calendrier') }}">
+                                        <div class="product-overlay">
+                                            <input type="hidden" name="idService" value="{{ service.id }}"/>
+                                            <input type="hidden" name="remoteMode" value="{{ cart.remoteMode}}"/>
+                                            <a href="#" class="add-to-cart item-quick-view"><button type="submit" class="btn-link" style="color: #333"><i class="icon-shopping-cart"></i><span> Choisir</span></button></a>
+                                            <a href="{{ path('rendez_vous_service_details', {id: service.id}) }}" class="item-quick-view ajax-service" data-lightbox="ajax"><i class="icon-zoom-in2"></i><span> Voir</span></a>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="product-desc center">
+                                    <div class="product-title"><h3>{{ service.name }}</h3></div>
+                                    <div class="product-price"><ins>{{ service.price }}€</ins> / heure</div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div><!-- #shop end -->
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        jQuery(function($) {
+            $('.product-lame').find('img').on('click', function() {
+                $(this).parents('.product').find('form').submit();
+            });
+        });
+    </script>
+{% endblock %}

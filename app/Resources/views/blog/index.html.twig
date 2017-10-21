@@ -1,0 +1,77 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}Blog « {{ theme.name }} »{% endblock %}
+
+{% block page_title %}
+    {% include 'index/page_title.html.twig' with {
+        page_title: 'Blog « ' ~ theme.name ~ ' »',
+        page_subtitle: 'Un espace d\'expression où divers thèmes holistiques sont abordés.',
+        steps: [{
+            url: null,
+            name: 'Blog'
+            }, {
+            url: null,
+            name: theme.name
+        }]
+    } %}
+{% endblock %}
+
+{% block content %}
+<div class="container clearfix">
+
+    <!-- Post Content
+    ============================================= -->
+    <div class="postcontent nobottommargin col_last clearfix">
+
+        <!-- Posts
+        ============================================= -->
+        <div id="posts">
+
+            {% for post in theme.posts %}
+
+                <div class="entry clearfix">
+                    <div class="entry-image">
+                        <a href="{{ path('blog_post', {date: post.date|date('Y-m-d'), slug: post.slug}) }}"><img class="image_fade" src="{{ asset('images/blog/' ~ post.image) }}" alt="Standard Post with Image"></a>
+                    </div>
+                    <div class="entry-title">
+                        <h2><a href="{{ path('blog_post', {date: post.date|date('Y-m-d'), slug: post.slug}) }}">{{ post.title }}</a></h2>
+                    </div>
+                    <ul class="entry-meta clearfix">
+                        <li><i class="icon-calendar3"></i> {{ post.date|date('d/m/Y') }}</li>
+                        <li><a href="{{ path('qui-suis-je') }}"><i class="icon-user"></i> {{ post.author }}</a></li>
+                        <li><i class="icon-folder-open"></i> <a href="#">{{ post.theme.name }}</a></li>
+                    </ul>
+                    <div class="entry-content">
+                        <p>{{ post.intro }}</p>
+                        <div class="tagcloud clearfix bottommargin">
+                            {% for tag in post.tags %}
+                            <a href="#">{{ tag.name }}</a>
+                            {% endfor %}
+                        </div>
+                        <a href="{{ path('blog_post', {date: post.date|date('Y-m-d'), slug: post.slug}) }}" class="more-link">Lire le billet</a>
+                    </div>
+
+                </div>
+            {% else %}
+                <div class="col nobottommargin">
+                    <div class="error404 center" style="font-size: 5em;">Aucun billet</div>
+                </div>
+            {% endfor %}
+
+
+        </div><!-- #posts end -->
+
+        <!-- Pagination
+        ============================================= -->
+        <ul class="pager nomargin">
+            <li class="previous"><a href="#">&larr; Précédent</a></li>
+        </ul><!-- .pager end -->
+
+    </div><!-- .postcontent end -->
+
+    <!-- Sidebar
+    ============================================= -->
+    {{ render(controller('AppBundle:Blog:sidebar', {idTheme: theme.id})) }}
+
+</div>
+{% endblock %}

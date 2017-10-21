@@ -1,0 +1,347 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ service.name }}{% endblock %}
+
+{% block page_title %}
+    {% include 'index/page_title.html.twig' with {
+    page_title: service.name,
+    page_subtitle: service.subtitle,
+    steps: [{
+        url: null,
+        name: 'Services'
+    }, {
+        url: path('service_category', {slug: service.category.slug}),
+        name: service.category.name
+    }]
+    } %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container clearfix">
+
+        <div class="postcontent nobottommargin clearfix">
+
+            <div class="single-product">
+
+                <div class="product">
+
+                    <div class="col_half">
+
+                        <!-- Product Single - Gallery
+                        ============================================= -->
+                        <div class="product-image">
+                            <div class="fslider" data-pagi="false" data-arrows="false" data-thumbs="true">
+                                <div class="flexslider">
+                                    <div class="slider-wrap" data-lightbox="gallery">
+                                        <div class="slide" data-thumb="{{ asset('images/services/' ~ service.image) }}">
+                                            <a href="{{ asset('images/services/' ~ service.image) }}" title="{{ service.name }} ({{ service.category.name }})" data-lightbox="gallery-item">
+                                                <img src="{{ asset('images/services/' ~ service.image) }}" alt="{{ service.name }} ({{ service.category.name }})">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- Product Single - Gallery End -->
+
+                    </div>
+
+                    <div class="col_half col_last product-desc">
+
+                        <!-- Product Single - Price
+                        ============================================= -->
+                        <div class="product-price"><ins>{{ service.price }}&euro;</ins> / heure</div><!-- Product Single - Price End -->
+
+                        <div class="clear"></div>
+                        <div class="line"></div>
+
+                        <!-- Product Single - Quantity & Cart Button
+                        ============================================= -->
+                        <form id="prendreRdv" class="cart clearfix nobottommargin" method="get" enctype='multipart/form-data' action="{{ path('rendez_vous_calendrier') }}">
+                            <input type="hidden" name="idService" value="{{ service.id }}"/>
+                            {#<button type="submit" class="add-to-cart button nomargin">Prendre rendez-vous</button>#}
+                            <a href="https://5euros.com/service/21658/vous-faire-aller-mieux" class="button button-border button-brown button-xlarge">Prendre rendez-vous</a>
+                        </form><!-- Product Single - Quantity & Cart Button End -->
+
+                        <div class="clear"></div>
+                        <div class="line"></div>
+
+                        <!-- Product Single - Short Description
+                        ============================================= -->
+                        {{ service.shortDescription|raw }}
+
+                        <!-- Product Single - Meta
+                        ============================================= -->
+                        <div class="panel panel-default product-meta">
+                            <div class="panel-body">
+                                <span class="posted_in">Catégorie : <a href="#" rel="tag">{{ service.category.name }}</a></span>
+                            </div>
+                        </div><!-- Product Single - Meta End -->
+
+                        <!-- Product Single - Share
+                        ============================================= -->
+                        <div class="si-share noborder clearfix">
+                            <span>Partagez ce service :</span>
+                            <div>
+                                <a href="#" class="social-icon si-borderless si-facebook">
+                                    <i class="icon-facebook"></i>
+                                    <i class="icon-facebook"></i>
+                                </a>
+                                <a href="#" class="social-icon si-borderless si-twitter">
+                                    <i class="icon-twitter"></i>
+                                    <i class="icon-twitter"></i>
+                                </a>
+                                <a href="#" class="social-icon si-borderless si-pinterest">
+                                    <i class="icon-pinterest"></i>
+                                    <i class="icon-pinterest"></i>
+                                </a>
+                                <a href="#" class="social-icon si-borderless si-linkedin">
+                                    <i class="icon-linkedin"></i>
+                                    <i class="icon-linkedin"></i>
+                                </a>
+                                <a href="#" class="social-icon si-borderless si-email3">
+                                    <i class="icon-email3"></i>
+                                    <i class="icon-email3"></i>
+                                </a>
+                            </div>
+                        </div><!-- Product Single - Share End -->
+
+                    </div>
+
+                    <div class="col_full nobottommargin">
+
+                        <div class="tabs clearfix nobottommargin" id="tab-1">
+
+                            <ul class="tab-nav clearfix">
+                                <li><a href="#tabs-1"><i class="icon-align-justify2"></i><span class="hidden-xs"> Description détaillée</span></a></li>
+                                <li><a href="#tabs-2"><i class="icon-info-sign"></i><span class="hidden-xs"> Informations techniques</span></a></li>
+                            </ul>
+
+                            <div class="tab-container">
+
+                                <div class="tab-content clearfix" id="tabs-1">
+                                    {{ service.longDescription|raw }}
+                                </div>
+                                <div class="tab-content clearfix" id="tabs-2">
+
+                                    <table class="table table-striped table-bordered">
+                                        <tbody>
+                                        <tr>
+                                            <td>Prix</td>
+                                            <td>{{ service.price }} euros de l'heure</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Consultation en face à face</td>
+                                            <td>Oui</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Consultation à distance</td>
+                                            <td>
+                                            {% if service.remoteMode == true %}
+                                                Oui
+                                            {% else %}
+                                                Non
+                                            {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Durée de la {% if service.category.slug == 'magnetisme' %}prestation énergétique{% else %}séance{% endif %}</td>
+
+                                            {% if service.category.slug == 'magnetisme' %}
+                                                <td>Entre 30 minutes et 1 heure</td>
+                                            {% else %}
+                                                <td>1 heure</td>
+                                            {% endif %}
+                                        </tr>
+                                        {% if service.category.slug == 'magnetisme' %}
+                                            <tr>
+                                                <td>Temps nécessaire avant effet</td>
+                                                <td>Jusqu'à 24 heures</td>
+                                            </tr>
+                                        {% elseif service.category.slug == 'divination' %}
+                                            <tr>
+                                                <td>Boisson offerte</td>
+                                                <td>Oui</td>
+                                            </tr>
+                                        {% elseif service.category.slug == 'mediumnite' %}
+                                            <tr>
+                                                <td>Compte-rendu en MP3</td>
+                                                <td>Oui</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Compte-rendu écrit</td>
+                                                <td>A demander</td>
+                                            </tr>
+                                        {% endif %}
+                                        </tbody>
+                                    </table>
+
+                                    <div class="col-md-4">
+                                        <div class="col-md-6">
+                                            <img src="{{ asset('images/interview-icon-black.png') }}" width="48" rel="tooltip" title="En face à face{% if service.remoteMode == false %} uniquement{% endif %}"/>
+                                        </div>
+                                        {% if service.remoteMode == true %}
+
+                                            <div class="col-md-6">
+                                                <img src="{{ asset('images/skype-icon-black.png') }}" width="48" rel="tooltip" title="Consultation à distance possible"/>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clear"></div><div class="line"></div>
+
+            <div class="col_full nobottommargin">
+
+                <h4>Cela peut aussi vous intéresser</h4>
+
+                <div id="oc-product" class="owl-carousel product-carousel carousel-widget" data-margin="30" data-pagi="false" data-autoplay="5000" data-items-xxs="1" data-items-sm="2" data-items-lg="3">
+
+                    {% for random_service in random_services %}
+                        {% if service.name != random_service.name %}
+                            <div class="oc-item">
+                                <div class="product iproduct clearfix">
+                                    <div class="nobottommargin">
+                                        <div class="feature-box media-box">
+                                            <a href="{{ path('service_index', {slugCategory: random_service.category.slug, slugService: random_service.slug}) }}">
+                                                <div class="fbox-media">
+                                                    <img src="{{ asset('images/services/' ~ random_service.image) }}" alt="Why choose Us?">
+                                                    <div class="overlay"><div class="overlay-wrap"><i class="icon-zoom-in2"></i></div></div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="product-desc center">
+                                            <div class="product-title"><h3><a href="{{ path('service_index', {slugCategory: random_service.category.slug, slugService: random_service.slug}) }}">{{ random_service.name }}</a></h3></div>
+                                            <div class="product-price"><ins>{{ random_service.price }}€</ins> / heure</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="sidebar nobottommargin col_last clearfix">
+            <div class="sidebar-widgets-wrap">
+
+                <div class="widget widget_links clearfix">
+
+                    <h4>Catégories de services</h4>
+                    <ul>
+                        {% for category in categories %}
+                            {% if service.category.name != category.name %}
+                                <li><a href="{{ path('service_category', {slug: category.slug}) }}">{{ category.name }}</a></li>
+                            {% else %}
+                                <li>{{ category.name }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+
+                </div>
+
+                <div class="widget clearfix">
+                    <h4>Dans la même catégorie</h4>
+                    <div id="post-list-footer">
+
+                        {% for additionnal_service in service.category.services %}
+                            {% if service.name != additionnal_service.name %}
+                                <div class="spost clearfix">
+                                    <div class="entry-image">
+                                        <a href="{{ path('service_index', {slugCategory: additionnal_service.category.slug, slugService: additionnal_service.slug}) }}"><img src="{{ asset('images/services/' ~ additionnal_service.image) }}" alt="Image"></a>
+                                    </div>
+                                    <div class="entry-c">
+                                        <div class="entry-title">
+                                            <h4><a href="{{ path('service_index', {slugCategory: additionnal_service.category.slug, slugService: additionnal_service.slug}) }}">{{ additionnal_service.name }}</a></h4>
+                                        </div>
+                                        <ul class="entry-meta">
+                                            <li class="color">{{ additionnal_service.price }}&euro;</li>
+                                            <li>heure</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+                <div class="widget clearfix">
+                    <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fsteve.david.therapeute&tabs=timeline%2C%20message&width=240&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=624472404312502" width="240" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal1 mfp-hide" id="modeRdv">
+        <div class="block divcenter" style="background-color: #FFF; max-width: 500px;">
+            <div class="center row" style="padding: 50px;">
+                <h3>Comment se passera le rendez-vous ?</h3>
+                <div class="{% if service.remoteMode == true %}col-md-6{% else %}col-md-12{% endif %} text-center">
+                    <img src="{{ asset('images/interview-icon-black.png') }}" style="width: 78px;"/>
+                    <form method="post" enctype='multipart/form-data' action="{{ path('rendez_vous_calendrier') }}">
+                        <input type="hidden" name="idService" value="{{ service.id }}"/>
+                        <input type="hidden" name="remoteMode" value="0"/>
+                        <button type="submit" class="add-to-cart button topmargin">En face à face{% if service.remoteMode == false %} uniquement{% endif %}</button>
+                    </form><!-- Product Single - Quantity & Cart Button End -->
+                </div>
+                {% if service.remoteMode == true %}
+                <div class="col-md-6 text-center">
+                    <img src="{{ asset('images/skype-icon-black.png') }}" style="width: 78px;"/>
+                    <form method="post" enctype='multipart/form-data' action="{{ path('rendez_vous_calendrier') }}">
+                        <input type="hidden" name="idService" value="{{ service.id }}"/>
+                        <input type="hidden" name="remoteMode" value="1"/>
+                        <button type="submit" class="add-to-cart button topmargin">A distance</button>
+                    </form><!-- Product Single - Quantity & Cart Button End -->
+                </div>
+                {% else %}
+                    La consultation à distance n'est pas possible pour ce service.
+                {% endif %}
+                <div class="col-md-12 text-center topmargin">
+                    <a href="#" onClick="$.magnificPopup.close();return false;"><small>Annuler</small></a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        jQuery(function($) {
+            $('#prendreRdv').on('submit', function(e) {
+                e.preventDefault();
+
+                $.magnificPopup.open({
+                    items: { src: '#modeRdv' },
+                    type: 'inline',
+                    midClick: true,
+                    closeOnBgClick: true,
+                    mainClass: 'mfp-no-margins mfp-fade',
+                    closeBtnInside: false,
+                    fixedContentPos: false,
+                    removalDelay: 500,
+
+                });
+
+            });
+
+            $('[rel=tooltip]').tooltip({
+                placement: 'bottom'
+            });
+        });
+    </script>
+{% endblock %}

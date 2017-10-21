@@ -1,0 +1,2 @@
+#processTabs a.step-active { cursor: default; }
+#processTabs a.step-disabled { cursor: not-allowed; }
