@@ -1,0 +1,17 @@
+<section id="page-title">
+    <div class="container clearfix">
+        <h1>{{ page_title }}</h1>
+        <span>{{ page_subtitle }}</span>
+        <ol class="breadcrumb">
+            <li><a href="{{ path('accueil') }}">Accueil</a></li>
+            {% for step in steps %}
+                {% if step.url is defined %}
+                    <li><a href="{{ step.url }}">{{ step.name }}</a></li>
+                {% else %}
+                    <li><a href="#">{{ step.name }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </div>
+
+</section><!-- #page-title end -->

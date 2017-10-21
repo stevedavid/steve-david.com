@@ -1,0 +1,6 @@
+<ul>
+    {% for theme in themes %}
+        <li><a href="{{ path('blog_index', {slugTheme: theme.slug}) }}"><div>{{ theme.name }}</div></a>
+        </li>
+    {% endfor %}
+</ul>

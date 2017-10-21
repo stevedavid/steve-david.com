@@ -1,0 +1,66 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block page_title %}
+    {% include 'index/page_title.html.twig' with {
+    page_title: category.name,
+    page_subtitle: category.subtitle,
+    steps: [{
+        name: 'Services'
+    }]
+    } %}
+{% endblock %}
+
+{% block page_menu %}
+    <div id="page-menu">
+
+        <div id="page-menu-wrap">
+
+            <div class="container clearfix">
+
+                <div class="menu-title">Services <span>associés</span></div>
+
+                <nav>
+                    <ul>
+                        {% for service in category.services %}
+                            <li><a href="{{ path('service_index', {slugCategory: category.slug, slugService: service.slug}) }}"><div>{{ service.name }}</div></a></li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+
+                <div id="page-submenu-trigger"><i class="icon-reorder"></i></div>
+
+            </div>
+
+        </div>
+
+    </div><!-- #page-menu end -->
+{% endblock %}
+
+{% block content %}
+<div class="container clearfix">
+
+    <div class="single-post nobottommargin">
+
+        <!-- Single Post
+        ============================================= -->
+        <div class="entry clearfix">
+
+            <!-- Entry Image
+            ============================================= -->
+            <div class="entry-image bottommargin">
+                <a href="#"><img style="width: 50%; margin: auto;" src="{{ asset('images/categories/' ~ category.imageFilename) }}" alt="{{ category.name }}"></a>
+            </div><!-- .entry-image end -->
+
+            <!-- Entry Content
+            ============================================= -->
+            <div class="entry-content notopmargin">
+
+                <p>{{ category.description }}</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

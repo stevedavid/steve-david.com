@@ -1,0 +1,44 @@
+{% if step > 0 %}
+    {% set path_step1 = path('rendez_vous_service') %}
+{% else %}
+    {% set path_step1 = '#' %}
+{% endif %}
+
+{% if step > 1 %}
+    {% set path_step2 = path('rendez_vous_calendrier') %}
+{% else %}
+    {% set path_step2 = '#' %}
+{% endif %}
+
+{% if step > 2 %}
+    {% set path_step3 = path('rendez_vous_choix_paiement') %}
+{% else %}
+    {% set path_step3 = '#' %}
+{% endif %}
+
+{% if step > 3 %}
+    {% set path_step4 = path('rendez_vous_confirmation') %}
+{% else %}
+    {% set path_step4 = '#' %}
+{% endif %}
+
+<div id="processTabs">
+    <ul class="process-steps bottommargin clearfix">
+        <li {% if step == 1 %}class="active"{% endif %}>
+            <a href="{{ path_step1 }}" class="{% if step == 1 %}step-active{% endif %} i-circled i-bordered i-alt divcenter">1</a>
+            <h5>Choisissez un service</h5>
+        </li>
+        <li {% if step == 2 %}class="active"{% endif %}>
+            <a href="{{ path_step2 }}" class="{% if step == 2 %}step-active{% endif %} i-circled i-bordered i-alt divcenter {% if step < 2 %}step-disabled{% endif %}">2</a>
+            <h5>Choisissez un créneau</h5>
+        </li>
+        <li {% if step == 3 %}class="active"{% endif %}>
+            <a href="{{ path_step3 }}" class="{% if step == 3 %}step-active{% endif %} i-circled i-bordered i-alt divcenter step-active {% if step < 3 %}step-disabled{% endif %}">3</a>
+            <h5>Choisissez un moyen de paiement</h5>
+        </li>
+        <li {% if step == 4 %}class="active"{% endif %}>
+            <a href="{{ path_step4 }}" class="{% if step == 4 %}step-active{% endif %} i-circled i-bordered i-alt divcenter {% if step < 4 %}step-disabled{% endif %}">4</a>
+            <h5>Confirmation avant réservation</h5>
+        </li>
+    </ul>
+</div>

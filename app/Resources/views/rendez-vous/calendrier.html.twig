@@ -1,0 +1,144 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}Prendre un rendez-vous (2/4){% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/custom_css.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/fullcalendar.min.css') }}" type="text/css" />
+    <style>
+        .fc-agenda-slots td div { height: 100px !important; }
+        .fc-widget-header > table, .fc-view table { margin-bottom: 0; }
+        button[disabled], button[disabled]:hover { background-color: #c5c5c5; cursor: not-allowed }
+    </style>
+{% endblock %}
+
+{% block cart %}
+
+{% endblock %}
+
+{% block page_title %}
+    {% include 'index/page_title.html.twig' with {
+    page_title: 'Prendre un rendez-vous',
+    page_subtitle: 'Choisissez maintenant un créneau horaire.',
+    steps: [{
+        name: 'Prendre un rendez-vous'
+    }, {
+        name: 'Choisissez un créneau'
+    }]
+    } %}
+{% endblock %}
+
+{% block content %}
+    <div class="container clearfix">
+        {% include 'rendez-vous/etapes.inc.html.twig' with {step: 2}%}
+
+        <div class="events-calendar nobottommargin">
+            <div id="calendar" class="fc-calendar-container"></div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <form class="text-center cart nobottommargin clearfix" method="post" enctype='multipart/form-data' action="{{ path('rendez_vous_choix_paiement') }}">
+            <input type="hidden" name="rdv" id="rdvInput"/>
+            <button disabled="disabled" type="submit" class="center-block add-to-cart button nomargin">Choisir ce créneau</button>
+            <div><button id="deleteEvent" class="button">Supprimer le créneau sélectionné</button></div>
+        </form><!-- Product Single - Quantity & Cart Button End -->
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/plugins/moment.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.locales.min.js') }}"></script>
+    <script>
+        jQuery(function($) {
+
+
+            $('#calendar').fullCalendar({
+                allDaySlot: false,
+                events: [{
+                    draggable: false,
+                    title: 'Non disponible',
+                    type: 'unavailable',
+                    overlap: false,
+                    dow: [1, 2, 3, 4, 5],
+                    startEditable: false,
+                    start: '08:30:00',
+                    end: '18:30:00',
+                    color: '#ecd5bb',
+                    textColor: '#444',
+                    exceptWithin: [{
+                        start: moment('2017-10-16','YYYY-MM-DD'),
+                        end: moment('2017-10-30','YYYY-MM-DD'),
+                    }],
+                }],
+                eventRender: function(event){
+                    if (event.type == 'unavailable') {
+                        return (event.exceptWithin.filter(function(exceptWithin){
+
+                            return (event.start.isBefore(exceptWithin.start) || event.start.isAfter(exceptWithin.end));
+
+                        }).length) > 0;
+                    } else {
+                        return true;
+                    }
+
+                },
+                minTime: '07:00:00',
+                maxTime: '21:00:00',
+                height: 500,
+                editable: false,
+                selectHelper: true,
+                selectOverlap: false,
+                eventStartEditable: true,
+                eventDurationEditable: false,
+                selectable: true,
+                weekNumbers: true,
+                aspectRatio: 0.95,
+                slotDuration: '01:00:00',
+                eventColor: '#8b786a',
+
+                defaultTimedEventDuration: '01:00:00',
+                header: {
+                    left: 'today,next',
+                    center: 'title',
+                    right: 'agendaWeek, month',
+                },
+                defaultView: 'agendaWeek',
+                locale: 'fr',
+                eventDrop: function(event) {
+                    $('#rdvInput').val(moment(event.start).format());
+                },
+                unselect: function() {
+                    $('#calendar').fullCalendar('option', 'selectable', false);
+                },
+                select: function(start, end, allDay) {
+                    var newEvent = new Object();
+                    newEvent.title = 'Votre rendez-vous';
+                    newEvent.id = 'rdv';
+                    newEvent.start = moment(start).format();
+                    newEvent.end = moment(end).format();
+                    newEvent.startEditable = true;
+                    newEvent.allDay = false;
+                    $('#calendar').fullCalendar('renderEvent', newEvent, true);
+                    $('#calendar').fullCalendar('unselect');
+                    $('button[type=submit]').prop('disabled', false);
+                    $('#rdvInput').val(newEvent.start);
+                },
+                selectAllow: function(selectInfo) {
+                    var duration = moment.duration(selectInfo.end.diff(selectInfo.start));
+                    return duration.asHours() <= 1;
+                },
+            });
+
+            $('#deleteEvent').on('click', function(e) {
+                e.preventDefault();
+                $('#calendar').fullCalendar('removeEvents', 'rdv')
+                $('button[type=submit]').prop('disabled', true);
+                $('#calendar').fullCalendar('option', 'selectable', true);
+                e.stopImmediatePropagation();
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

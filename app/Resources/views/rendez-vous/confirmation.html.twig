@@ -1,0 +1,212 @@
+{% extends '::base.html.twig' %}
+
+{% block cart %}
+    {{ render(controller('AppBundle:RendezVous:cart')) }}
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/custom_css.css') }}">
+{% endblock %}
+
+{% block title %}Prendre un rendez-vous (4/4){% endblock %}
+
+{% block page_title %}
+    {% include 'index/page_title.html.twig' with {
+    page_title: 'Prendre un rendez-vous',
+    page_subtitle: 'D\'accord. Une dernière confirmation.',
+    steps: [{
+    name: 'Prendre un rendez-vous'
+    }, {
+    name: 'Confirmation avant réservation'
+    }]
+    } %}
+{% endblock %}
+
+{% block content %}
+    <div class="container clearfix">
+        {% include 'rendez-vous/etapes.inc.html.twig' with {step: 4} %}
+
+    {{ form_start(form) }}
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <div class="table-responsive clearfix">
+                    <h3>Votre commande</h3>
+                    <h4>Votre service</h4>
+
+                    <table class="table cart">
+                        <thead>
+                        <tr>
+                            <th class="cart-product-thumbnail">&nbsp;</th>
+                            <th class="cart-product-thumbnail">Service</th>
+                            <th class="cart-product-name">&nbsp;</th>
+                            <th class="cart-product-quantity">Quantité</th>
+                            <th class="cart-product-subtotal">Montant</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="cart_item">
+                            <td>
+                                {% if cart.remoteMode == true %}
+                                    <img width="48" src="{{ asset('images/skype-icon-black.png') }}"/>
+                                {% else %}
+                                    <img width="48" src="{{ asset('images/interview-icon-black.png') }}"/>
+                                {% endif %}
+                            </td>
+                            <td class="cart-product-thumbnail">
+                                <a href="#"><img width="64" height="64" src="{{ asset('images/services/' ~ cart.service.image) }}" alt="Pink Printed Dress"/></a>
+
+                            </td>
+
+                            <td class="cart-product-name">
+                                <div class="quantity clearfix">
+                                    {{ cart.service.name }}
+                                    <br/>
+                                    {% if cart.remoteMode == true %}
+                                        <small>(à distance)</small>
+                                    {% else %}
+                                        <small>(en face à face)</small>
+                                    {% endif %}
+                                </div>
+
+                            </td>
+
+                            <td class="cart-product-quantity">
+                                <div class="quantity clearfix">
+                                    1 heure
+                                </div>
+                            </td>
+
+                            <td class="cart-product-subtotal">
+                                <span class="amount">{{ cart.service.price }}€</span>
+                            </td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+            <div class="clear bottommargin"></div>
+            <div class="col-md-12">
+                <div class="table-responsive clearfix">
+                    <h4>Votre rendez-vous</h4>
+
+                    <table class="table cart">
+                        <thead>
+                        <tr>
+                            <th class="cart-product-thumbnail">Jour</th>
+                            <th class="cart-product-name">Date</th>
+                            <th class="cart-product-quantity">Heure</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="cart_item">
+                            <td class="cart-product-name">
+                                <div class="quantity clearfix">
+                                    {{ cart.appointment|localizeddate('medium', 'none', null, null, 'EEEE') }}
+                                </div>
+                            </td>
+
+                            <td class="cart-product-name">
+                                <div class="quantity clearfix">
+                                    {{ cart.appointment|localizeddate('medium', 'none', null, null, 'dd LLLL Y') }}
+                                </div>
+                            </td>
+
+                            <td class="cart-product-quantity">
+                                <div class="quantity clearfix">
+                                    {{ cart.appointment|localizeddate('medium', 'none', null, null, 'HH:mm') }}
+                                </div>
+                            </td>
+
+                        </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+
+            <div class="clear bottommargin"></div>
+
+            <form>
+            <div class="col-md-6">
+                <h4>Vos coordonnées</h4>
+
+
+                    <div class="col_half">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                    </div>
+
+                    <div class="col_half col_last">
+                        {{ form_label(form.lastname) }}
+                        {{ form_widget(form.lastname) }}
+                    </div>
+
+                    <div class="clear"></div>
+
+                    <div class="col_half">
+                        {{ form_label(form.email) }}
+                        {{ form_widget(form.email) }}
+                    </div>
+
+                    <div class="col_half col_last">
+                        {{ form_label(form.phone) }}
+                        {{ form_widget(form.phone) }}
+                    </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="table-responsive">
+                    <h4>Montant de la commande</h4>
+
+                    <table class="table cart">
+                        <tbody>
+                        <tr class="cart_item">
+                            <td class="notopborder cart-product-name">
+                                <strong>Montant du service</strong>
+                            </td>
+
+                            <td class="notopborder cart-product-name">
+                                <span class="amount">{{ cart.service.price }} €</span>
+                            </td>
+                        </tr>
+                        <tr class="cart_item">
+                            <td class="cart-product-name">
+                                <strong>Frais de transaction</strong>
+                            </td>
+
+                            <td class="cart-product-name">
+                                <span class="amount">0 €</span>
+                            </td>
+                        </tr>
+                        <tr class="cart_item">
+                            <td class="cart-product-name">
+                                <strong>Total de la commande</strong>
+                            </td>
+
+                            <td class="cart-product-name">
+                                <span class="amount color lead"><strong>{{ cart.service.price }} €</strong></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="clear bottommargin"></div>
+            </div>
+
+        </div>
+        <div class="clear bottommargin"></div>
+
+        <div class="row">
+            <div class="col-sx-12 section nobottommargin notopmargin notoppadding nobottompadding">
+                <div class="text-center col-md-12">{{ form_row(form.submit) }}</div>
+            </div>
+        </div>
+    {{ form_end(form) }}
+
+{% endblock %}

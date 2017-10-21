@@ -1,0 +1,103 @@
+
+<div class="sidebar nobottommargin clearfix">
+    <div class="sidebar-widgets-wrap">
+
+        <div class="widget clearfix">
+
+            <h4>Derniers billets</h4>
+            <div class="tabs nobottommargin clearfix" id="sidebar-tabs">
+
+                <ul class="tab-nav clearfix">
+                    <li><a href="#tabs-1"><i class="icon-line2-target"></i></a></li>
+                    <li><a href="#tabs-2"><i class="icon-list-ul"></i></a></li>
+                </ul>
+
+                <div class="tab-container">
+
+                    <div class="tab-content clearfix" id="tabs-1">
+                        <div id="popular-post-list-sidebar">
+                            {% for post in post_thumbs_in_theme %}
+                            <div class="spost clearfix">
+                                <div class="entry-image">
+                                    <a href="#" class="nobg"><img class="img-circle" src="{{ asset('images/blog/' ~ post.image) }}" alt=""></a>
+                                </div>
+                                <div class="entry-c">
+                                    <ul class="entry-meta">
+                                        <li><i class="icon-book"></i> {{ post.theme.name }}</li>
+                                    </ul>
+                                    <br/>
+                                    <div class="entry-title">
+                                        <h4><a href="#">{{ post.title }}</a></h4>
+                                    </div>
+                                    <ul class="entry-meta">
+                                        <li><i class="icon-calendar"></i> {{ post.date|date('d/m/Y') }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            {% else %}
+                                &bull; Aucun billet
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="tab-content clearfix" id="tabs-2">
+                        <div id="popular-post-list-sidebar">
+                            {% for post in post_thumbs %}
+                                <div class="spost clearfix">
+                                    <div class="entry-image">
+                                        <a href="#" class="nobg"><img class="img-circle" src="{{ asset('images/blog/' ~ post.image) }}" alt=""></a>
+                                    </div>
+                                    <div class="entry-c">
+                                        <ul class="entry-meta">
+                                            <li><i class="icon-book"></i> {{ post.theme.name }}</li>
+                                        </ul>
+                                        <br/>
+                                        <div class="entry-title">
+                                            <h4><a href="{{ path('blog_post', {date: post.date|date('Y-m-d'), slug: post.slug}) }}">{{ post.title }}</a></h4>
+                                        </div>
+                                        <ul class="entry-meta">
+                                            <li><i class="icon-calendar"></i> {{ post.date|date('d/m/Y') }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% else %}
+                                &bull; Aucun billet
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div id="shortcodes" class="widget widget_links clearfix">
+            <h4 class="highlight-me">Thèmes</h4>
+            <ul>
+                {% for theme in themes %}
+                    <li><a href="{{ path('blog_index', {slugTheme: theme.slug}) }}"><div>{{ theme.name }}</div></a></li>
+                {% endfor %}
+            </ul>
+
+        </div>
+
+
+        <div class="widget clearfix">
+            <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fsteve.david.therapeute&tabs=timeline%2C%20message&width=240&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=624472404312502" width="240" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+        </div>
+
+        <div class="widget clearfix">
+
+            <h4>Tags</h4>
+            <div class="tagcloud">
+                {% for tag in tags %}
+                    <a href="#">{{ tag.name }}</a>
+                {% endfor %}
+            </div>
+
+        </div>
+
+    </div>
+
+</div><!-- .sidebar end -->

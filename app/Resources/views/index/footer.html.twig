@@ -1,0 +1,135 @@
+<div class="container">
+
+    <!-- Footer Widgets
+    ============================================= -->
+    <div class="footer-widgets-wrap clearfix">
+
+        <div class="col_two_third">
+
+            <div class="col_one_third">
+
+                <div class="widget clearfix">
+
+                    <img src="{{ asset('images/logo-footer.png') }}" alt="" class="footer-logo">
+
+
+                    <div style="background: url('{{ asset('images/world-map.png') }}') no-repeat center center; background-size: 100%;">
+                        <address>
+                            1440 av. du Père Soulas<br>
+                            34090 Montpellier<br>
+                        </address>
+                        <abbr title="Numéro de téléphone"><strong>Téléphone :</strong></abbr> 0781-350-383<br>
+                        <abbr title="Adresse e-mail"><strong>Email :</strong></abbr> hello@steve-david.com
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col_one_third">
+
+                <div class="widget widget_links clearfix">
+                    {#
+                    <h4>Blog</h4>
+
+                    <ul>
+                        {% for theme in themes %}
+                            <li><a href="{{ path('blog_index', {slugTheme: theme.slug}) }}">{{ theme.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    #}
+                </div>
+
+            </div>
+
+            <div class="col_one_third col_last">
+
+                <div class="widget clearfix">
+                    {#
+                    <h4>Derniers billets</h4>
+
+                    <div id="post-list-footer">
+                        {% for post in posts %}
+                            <div class="spost clearfix">
+                                <div class="entry-c">
+                                    <div class="entry-title">
+                                        <h4><a href="{{ path('blog_post', {date: post.date|date('Y-m-d'), slug: post.slug}) }}">{{ post.title }}</a></h4>
+                                    </div>
+                                    <ul class="entry-meta">
+                                        <li>{{ post.date|date('d/m/Y') }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    #}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col_one_third col_last">
+
+            <div class="widget clearfix" style="margin-bottom: -20px;">
+
+                <div class="row">
+
+                    <div class="col-md-6 bottommargin-sm">
+                        <div class="counter counter-small"><span data-from="0" data-to="{{ nb_services }}" data-refresh-interval="1" data-speed="300" data-comma="false"></span></div>
+                        <h5 class="nobottommargin">services</h5>
+                    </div>
+                    {#
+                    <div class="col-md-6 bottommargin-sm">
+                        <div class="counter counter-small"><span data-from="0" data-to="{{ nb_blog_posts }}" data-refresh-interval="1" data-speed="200" data-comma="false"></span></div>
+                        <h5 class="nobottommargin">billets de blog</h5>
+                    </div>
+                    #}
+                </div>
+
+            </div>
+            {#
+            <div class="widget subscribe-widget clearfix">
+                <h5><strong>Laissez-moi</strong> votre adresse email et je vous recontacte.</h5>
+                <div class="widget-subscribe-form-result"></div>
+                <form id="widget-subscribe-form" action="#" role="form" method="post" class="nobottommargin">
+                    <div class="input-group divcenter">
+                        <span class="input-group-addon"><i class="icon-email2"></i></span>
+                        <input type="email" id="widget-subscribe-form-email" name="widget-subscribe-form-email" class="form-control required email" placeholder="Entrez votre adresse email">
+                        <span class="input-group-btn">
+										<button class="btn btn-success" type="submit">Envoyer</button>
+									</span>
+                    </div>
+                </form>
+            </div>
+            #}
+            <div class="widget clearfix" style="margin-bottom: -20px;">
+
+                <div class="row">
+
+                    <div class="col-md-6 clearfix bottommargin-sm">
+                        <a target="_blank" href="http://www.facebook.com/steve.david.therapeute" class="social-icon si-dark si-colored si-facebook nobottommargin" style="margin-right: 10px;">
+                            <i class="icon-facebook"></i>
+                            <i class="icon-facebook"></i>
+                        </a>
+                        <a href="http://www.facebook.com/steve.david.therapeute"><small style="display: block; margin-top: 3px;"><strong>Suivez-moi</strong><br>sur Facebook</small></a>
+                    </div>
+                    <div class="col-md-6 clearfix">
+                        <a target="_blank" href="https://www.youtube.com/channel/UC7dE37VYBNnooSjLI77IybQ" class="social-icon si-dark si-colored si-youtube nobottommargin" style="margin-right: 10px;">
+                            <i class="icon-youtube-play"></i>
+                            <i class="icon-youtube-play"></i>
+                        </a>
+                        <a href="#"><small style="display: block; margin-top: 3px;"><strong>Suivez-moi</strong><br>sur YouTube</small></a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+    </div><!-- .footer-widgets-wrap end -->
+
+</div>

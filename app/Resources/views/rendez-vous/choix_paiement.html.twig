@@ -1,0 +1,112 @@
+{% extends '::base.html.twig' %}
+
+{% set remote_rdv = cart.service.remoteMode == true and cart.remoteMode == true %}
+
+{% block cart %}
+    {{ render(controller('AppBundle:RendezVous:cart')) }}
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/custom_css.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/bs-switches.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/components/radio-checkbox.css') }}" type="text/css" />
+{% endblock %}
+
+{% block title %}Prendre un rendez-vous (3/4){% endblock %}
+
+{% block page_title %}
+    {% include 'index/page_title.html.twig' with {
+    page_title: 'Prendre un rendez-vous',
+    page_subtitle: 'Bien. Passons au mode de règlement.',
+    steps: [{
+    name: 'Prendre un rendez-vous'
+    }, {
+    name: 'Choisissez un moyen de paiement'
+    }]
+    } %}
+{% endblock %}
+
+{% block content %}
+    <div class="container clearfix">
+        {% include 'rendez-vous/etapes.inc.html.twig' with {step: 3} %}
+        <form class="cart nobottommargin clearfix center-block" method="post" enctype='multipart/form-data' action="{{ path('rendez_vous_confirmation') }}">
+            <div class="section nobottommargin">
+                <div class="container clearfix">
+
+                    <div class="col_one_third nobottommargin">
+                        <div class="feature-box fbox-plain fbox-dark fbox-small" >
+
+                            <div class="fbox-icon">
+                                <i class="icon-money" {% if remote_rdv == true %}style="color: #c5c5c5"{% endif %}></i>
+                            </div>
+                            <h3 {% if remote_rdv == true %}style="color: #c5c5c5"{% endif %}>Chèque ou espèces</h3>
+                            <p class="notopmargin" >
+                                <span {% if remote_rdv == true %}style="color: #c5c5c5"{% endif %}>Je paye par chèque ou en espèces à la fin du rendez-vous en face à face.</span>
+                            </p>
+                            {% if remote_rdv != true %}
+                            <div class="center-block" style="width: 50px; zoom: 1.5">
+                                <input id="liquide"  class="radio-style" name="choix_paiement" type="radio" value="{{ constant('AppBundle\\Entity\\Cart::MODE_CASH') }}">
+                                <label for="liquide" class="radio-style-2-label"></label>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col_one_third nobottommargin" rel="tooltip" title="Ce mode de paiement n'est pas encore disponible">
+                        <div class="feature-box fbox-plain fbox-dark fbox-small">
+                            <div class="fbox-icon">
+                                <i class="icon-credit-cards" style="color: #c5c5c5"></i>
+                            </div>
+                            <h3 style="color: #c5c5c5">Carte de crédit</h3>
+                            <p class="nobottommargin" style="color: #c5c5c5">Je règle le montant en ligne par carte avant le rendez-vous.</p>
+                        </div>
+
+                        {#<div class="center-block" style="width: 50px; zoom: 1.5">#}
+                            {#<input id="carte" class="radio-style" name="choix_paiement" type="radio" value="{{ constant('AppBundle\\Entity\\Cart::MODE_BANK_CARD') }}">#}
+                            {#<label for="carte" class="radio-style-2-label"></label>#}
+                        {#</div>#}
+                    </div>
+
+                    <div class="col_one_third nobottommargin col_last" rel="tooltip" title="Ce mode de paiement n'est pas encore disponible">
+                        <div class="feature-box fbox-plain fbox-dark fbox-small">
+                            <div class="fbox-icon">
+                                <i class="icon-paypal" style="color: #c5c5c5"></i>
+                            </div>
+                            <h3>Paypal</h3>
+                            <p class="nobottommargin" style="color: #c5c5c5">Je règle le montant en ligne par Paypal avant le rendez-vous.</p>
+                        </div>
+
+                        {#<div class="center-block" style="width: 50px; zoom: 1.5">#}
+                            {#<input id="paypal" class="radio-style" name="choix_paiement" type="radio" value="{{ constant('AppBundle\\Entity\\Cart::MODE_PAYPAL') }}">#}
+                            {#<label for="paypal" class="radio-style-2-label"></label>#}
+                        {#</div>#}
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sx-12 section nobottommargin notopmargin notoppadding nobottompadding">
+                    <div class="text-center col-md-12"><button type="submit" class="center-block add-to-cart button nomargin">Choisir</button></div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        jQuery(function($) {
+            $('.col_one_third').css('cursor', 'pointer').on('click', function() {
+                $(this).find('input').prop('checked', true);
+            }).hover(function() {
+                $(this).css('backgroundColor', '#F9F9F9');
+            }, function($) {
+                $(this).css('backgroundColor', '#eaeaea');
+
+            });
+
+            $('[rel=tooltip').tooltip();
+        });
+    </script>
+{% endblock %}
