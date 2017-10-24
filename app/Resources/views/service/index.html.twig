@@ -59,8 +59,8 @@
                         ============================================= -->
                         <form id="prendreRdv" class="cart clearfix nobottommargin" method="get" enctype='multipart/form-data' action="{{ path('rendez_vous_calendrier') }}">
                             <input type="hidden" name="idService" value="{{ service.id }}"/>
-                            {#<button type="submit" class="add-to-cart button nomargin">Prendre rendez-vous</button>#}
-                            <a href="https://5euros.com/service/21658/vous-faire-aller-mieux" class="button button-border button-brown button-xlarge">Prendre rendez-vous</a>
+                            <button type="submit" class="add-to-cart button nomargin">Prendre rendez-vous</button>
+                            {#<a href="https://5euros.com/service/21658/vous-faire-aller-mieux" class="button button-border button-brown button-xlarge">Prendre rendez-vous</a>#}
                         </form><!-- Product Single - Quantity & Cart Button End -->
 
                         <div class="clear"></div>
@@ -145,13 +145,8 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Durée de la {% if service.category.slug == 'magnetisme' %}prestation énergétique{% else %}séance{% endif %}</td>
-
-                                            {% if service.category.slug == 'magnetisme' %}
-                                                <td>Entre 30 minutes et 1 heure</td>
-                                            {% else %}
-                                                <td>1 heure</td>
-                                            {% endif %}
+                                            <td>Durée de la séance</td>
+                                            <td>1 heure</td>
                                         </tr>
                                         {% if service.category.slug == 'magnetisme' %}
                                             <tr>

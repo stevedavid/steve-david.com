@@ -129,75 +129,75 @@
 
             <div class="clear bottommargin"></div>
 
-            <form>
-            <div class="col-md-6">
-                <h4>Vos coordonnées</h4>
+            {{ form_start(form) }}
+                <div class="col-md-6">
+                    <h4>Vos coordonnées</h4>
 
 
-                    <div class="col_half">
-                        {{ form_label(form.name) }}
-                        {{ form_widget(form.name) }}
-                    </div>
+                        <div class="col_half">
+                            {{ form_label(form.name) }}
+                            {{ form_widget(form.name) }}
+                        </div>
 
-                    <div class="col_half col_last">
-                        {{ form_label(form.lastname) }}
-                        {{ form_widget(form.lastname) }}
-                    </div>
+                        <div class="col_half col_last">
+                            {{ form_label(form.lastname) }}
+                            {{ form_widget(form.lastname) }}
+                        </div>
 
-                    <div class="clear"></div>
+                        <div class="clear"></div>
 
-                    <div class="col_half">
-                        {{ form_label(form.email) }}
-                        {{ form_widget(form.email) }}
-                    </div>
+                        <div class="col_half">
+                            {{ form_label(form.email) }}
+                            {{ form_widget(form.email) }}
+                        </div>
 
-                    <div class="col_half col_last">
-                        {{ form_label(form.phone) }}
-                        {{ form_widget(form.phone) }}
-                    </div>
-
-            </div>
-
-
-            <div class="col-md-6">
-                <div class="table-responsive">
-                    <h4>Montant de la commande</h4>
-
-                    <table class="table cart">
-                        <tbody>
-                        <tr class="cart_item">
-                            <td class="notopborder cart-product-name">
-                                <strong>Montant du service</strong>
-                            </td>
-
-                            <td class="notopborder cart-product-name">
-                                <span class="amount">{{ cart.service.price }} €</span>
-                            </td>
-                        </tr>
-                        <tr class="cart_item">
-                            <td class="cart-product-name">
-                                <strong>Frais de transaction</strong>
-                            </td>
-
-                            <td class="cart-product-name">
-                                <span class="amount">0 €</span>
-                            </td>
-                        </tr>
-                        <tr class="cart_item">
-                            <td class="cart-product-name">
-                                <strong>Total de la commande</strong>
-                            </td>
-
-                            <td class="cart-product-name">
-                                <span class="amount color lead"><strong>{{ cart.service.price }} €</strong></span>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                        <div class="col_half col_last">
+                            {{ form_label(form.phone) }}
+                            {{ form_widget(form.phone) }}
+                        </div>
 
                 </div>
-                <div class="clear bottommargin"></div>
-            </div>
+
+
+                <div class="col-md-6">
+                    <div class="table-responsive">
+                        <h4>Montant de la commande</h4>
+
+                        <table class="table cart">
+                            <tbody>
+                            <tr class="cart_item">
+                                <td class="notopborder cart-product-name">
+                                    <strong>Montant du service</strong>
+                                </td>
+
+                                <td class="notopborder cart-product-name">
+                                    <span class="amount">{{ cart.service.price }} €</span>
+                                </td>
+                            </tr>
+                            <tr class="cart_item">
+                                <td class="cart-product-name">
+                                    <strong>Frais de transaction</strong>
+                                </td>
+
+                                <td class="cart-product-name">
+                                    <span class="amount">0 €</span>
+                                </td>
+                            </tr>
+                            <tr class="cart_item">
+                                <td class="cart-product-name">
+                                    <strong>Total de la commande</strong>
+                                </td>
+
+                                <td class="cart-product-name">
+                                    <span class="amount color lead"><strong>{{ cart.service.price }} €</strong></span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="clear bottommargin"></div>
+                </div>
 
         </div>
         <div class="clear bottommargin"></div>
@@ -205,8 +205,48 @@
         <div class="row">
             <div class="col-sx-12 section nobottommargin notopmargin notoppadding nobottompadding">
                 <div class="text-center col-md-12">{{ form_row(form.submit) }}</div>
+                <div id="paypal-button"></div>
             </div>
         </div>
     {{ form_end(form) }}
+    </div>
 
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script>
+    paypal.Button.render({
+
+        env: 'sandbox', // Or 'sandbox'
+
+        client: {
+            sandbox:    'ASnsGdfd4QeEn08p61Lc73zVFPC6z3dm4o_JrfS9_4pDOlWYqpCqSjaOmCEQdCXlhvydFersKVR3U7My',
+            production: ''
+        },
+
+        commit: true, // Show a 'Pay Now' button
+
+        payment: function(data, actions) {
+            return actions.payment.create({
+                payment: {
+                    transactions: [
+                        {
+                            amount: { total: '{{ cart.service.price }}', currency: 'EUR' }
+                        }
+                    ]
+                }
+            });
+        },
+
+        onAuthorize: function(data, actions) {
+            return actions.redirect();
+        },
+
+        onCancel: function(data, actions) {
+            return actions.redirect();
+        }
+
+    }, '#paypal-button');
+</script>
 {% endblock %}

@@ -5,6 +5,8 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Cart;
 use AppBundle\Entity\Service;
 use AppBundle\Form\CommandeType;
+use PayPal\Api\Item;
+use PayPal\Api\Payer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,24 +21,23 @@ class RendezVousController extends Controller
     const PAYMENT_MODES = [Cart::MODE_CASH, Cart::MODE_BANK_CARD, Cart::MODE_PAYPAL];
 
     /**
-     * @Route("/prendre-rendez-vous/service", name="rendez_vous_service")
+     * @Route("/prendre-rendez-vous/service/{mode}", name="rendez_vous_service", defaults={"mode": "face-a-face"}, requirements={"mode": "a-distance|face-a-face"})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function serviceAction()
+    public function serviceAction($mode)
     {
         $session = new Session();
         $doctrine = $this->get('doctrine');
         $request = Request::createFromGlobals();
         $categories = $doctrine->getRepository('AppBundle:Category')->findAll();
 
+        /** @var Cart $cart */
         $cart = $doctrine->getRepository('AppBundle:Cart')->findOneByIdSession($session->getId());
 
         $em = $doctrine->getEntityManager();
 
-        $distance = $request->get('distance');
-
-        $distance =  !empty($distance) ? true : false;
+        $distance =  $mode == 'a-distance';
 
         if (empty($cart)) {
             $cart = (new Cart)
@@ -198,9 +199,27 @@ class RendezVousController extends Controller
         $session = new Session();
         $doctrine = $this->get('doctrine');
         $em = $doctrine->getEntityManager();
+
+        /** @var Cart $cart */
         $cart = $doctrine->getRepository('AppBundle:Cart')->findOneByIdSession($session->getId());
 
         if (!empty($cart)) {
+
+            /** @var Service $service */
+            $service = $cart->getService();
+
+            $payer = new Payer();
+            $payer->setPaymentmethod('paypal');
+
+            $item = new Item();
+            $item->setName($service->getName())
+                ->setcurrency('EUR')
+                ->setQuantity(1)
+                ->setSku($service->getId())
+                ->setPrice($service->getPrice());
+
+
+
             $cart->setPaid(true);
             $em->persist($cart);
             $em->flush();
@@ -210,6 +229,17 @@ class RendezVousController extends Controller
         $session->getFlashBag()->add('success', 'Commande validée.');
 
         return $this->redirectToRoute('accueil');
+    }
+
+    /**
+     * @Route("/prendre-rendez-vous/paiement/confirmation", name="rendez_vous_paiement_effectue")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function paymentDoneAction()
+    {
+        dump('Payment done');
+        exit;
     }
 
     /**
@@ -263,6 +293,10 @@ class RendezVousController extends Controller
             }
         } else {
             $backlink = null;
+        }
+
+        if ($cart->getPaid()) {
+            $cart = null;
         }
 
 

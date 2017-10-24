@@ -47,13 +47,13 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('js/plugins/moment.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.locales.min.js') }}"></script>
+    {#<script type="text/javascript" src="{{ asset('js/plugins/moment.js') }}"></script>#}
+    {#<script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.min.js') }}"></script>#}
+    {#<script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.locales.min.js') }}"></script>#}
     <script>
         jQuery(function($) {
 
-
+            {#
             $('#calendar').fullCalendar({
                 allDaySlot: false,
                 events: [{
@@ -139,6 +139,7 @@
                 e.stopImmediatePropagation();
                 return false;
             });
+            #}
         });
     </script>
 {% endblock %}
