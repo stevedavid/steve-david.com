@@ -287,7 +287,7 @@ class RendezVousController extends Controller
         }
 
 
-        $session->getFlashBag()->add('success', 'Commande validée.');
+//        $session->getFlashBag()->add('success', 'Commande validée.');
 
         return $this->redirectToRoute('accueil');
     }
