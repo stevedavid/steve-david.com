@@ -13,6 +13,30 @@
             color: white !important;
             text-decoration: none;
         }
+
+        #liste-services button[type=submit] {
+            display: block;
+            float: left;
+            width: 50%;
+            font-size: 13px;
+            color: #333;
+            padding: 0;
+            background-color: #F5F5F5;
+            text-align: center;
+            border-right: 1px solid rgba(0,0,0,0.1);
+        }
+
+        #liste-services button[type=submit]:hover {
+            background-color: #333;
+            color: #FFF;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
+
+        #liste-services button[type=submit]:hover span,
+        #liste-services.product button[type=submit]:hover i {
+            color: #FFF !important;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
     </style>
 {% endblock %}
 
@@ -31,7 +55,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container clearfix">
+    <div class="container clearfix" id="liste-services">
         {% include 'rendez-vous/etapes.inc.html.twig' with {step: 1} %}
         {% for category in categories %}
             <div class="row entry clearfix">
@@ -47,8 +71,8 @@
                                     <form method="post" action="{{ path('rendez_vous_calendrier') }}">
                                         <div class="product-overlay">
                                             <input type="hidden" name="idService" value="{{ service.id }}"/>
-                                            <input type="hidden" name="remoteMode" value="{{ cart.remoteMode}}"/>
-                                            <a href="#" class="add-to-cart item-quick-view"><button type="submit" class="btn-link" style="color: #333"><i class="icon-shopping-cart"></i><span> Choisir</span></button></a>
+                                            <input type="hidden" name="remoteMode" value="{{ cart.remote}}"/>
+                                            <button type="submit" class="btn-link" style="color: #333"><i class="icon-shopping-cart"></i><span> Choisir</span></button>
                                             <a href="{{ path('rendez_vous_service_details', {id: service.id}) }}" class="item-quick-view ajax-service" data-lightbox="ajax"><i class="icon-zoom-in2"></i><span> Voir</span></a>
                                         </div>
                                     </form>

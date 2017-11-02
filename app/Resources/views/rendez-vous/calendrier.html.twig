@@ -2,13 +2,47 @@
 
 {% block title %}Prendre un rendez-vous (2/4){% endblock %}
 
+
 {% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/custom_css.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/fullcalendar.min.css') }}" type="text/css" />
+
     <style>
         .fc-agenda-slots td div { height: 100px !important; }
         .fc-widget-header > table, .fc-view table { margin-bottom: 0; }
         button[disabled], button[disabled]:hover { background-color: #c5c5c5; cursor: not-allowed }
+
+        .bootstrap-datetimepicker-widget table td.disabled, .bootstrap-datetimepicker-widget table td.disabled:hover,
+        .bootstrap-datetimepicker-widget table td span.disabled, .bootstrap-datetimepicker-widget table td span.disabled:hover {
+            color: #b7b7b7;
+        }
+
+        .bootstrap-datetimepicker-widget table td.day,
+        .bootstrap-datetimepicker-widget table span.month {
+            font-weight: 800;
+        }
+
+        .bootstrap-datetimepicker-widget table td.old:not(.disabled), .bootstrap-datetimepicker-widget table td.new:not(.disabled) {
+            color: #717171;
+            font-weight: 400;
+        }
+
+        .fc-calendar-container {
+            margin-bottom: 30px;
+        }
+
+        #choose-date {
+            margin-bottom: 30px;
+        }
+
+        em {
+            font-style: normal;
+            border-bottom: 1px dotted #a5a5a5;
+        }
+
+        th.picker-switch[title="Select Year"] {
+            pointer-events: none;
+        }
     </style>
 {% endblock %}
 
@@ -19,7 +53,7 @@
 {% block page_title %}
     {% include 'index/page_title.html.twig' with {
     page_title: 'Prendre un rendez-vous',
-    page_subtitle: 'Choisissez maintenant un créneau horaire.',
+    page_subtitle: 'Choisi  ssez maintenant un créneau horaire.',
     steps: [{
         name: 'Prendre un rendez-vous'
     }, {
@@ -33,27 +67,66 @@
         {% include 'rendez-vous/etapes.inc.html.twig' with {step: 2}%}
 
         <div class="events-calendar nobottommargin">
-            <div id="calendar" class="fc-calendar-container"></div>
+            <div id="datetimepicker" class="fc-calendar-container "></div>
+            {#<input type="text" id="datetimepicker" disabled="disabled"/>#}
         </div>
-    </div>
 
-    <div class="col-md-12">
-        <form class="text-center cart nobottommargin clearfix" method="post" enctype='multipart/form-data' action="{{ path('rendez_vous_choix_paiement') }}">
-            <input type="hidden" name="rdv" id="rdvInput"/>
-            <button disabled="disabled" type="submit" class="center-block add-to-cart button nomargin">Choisir ce créneau</button>
-            <div><button id="deleteEvent" class="button">Supprimer le créneau sélectionné</button></div>
-        </form><!-- Product Single - Quantity & Cart Button End -->
+        <div class="col-md-12">
+            <form class="text-center cart nobottommargin clearfix" method="post" enctype='multipart/form-data' action="{{ path('rendez_vous_choix_paiement') }}">
+                <input type="hidden" name="rdv" id="rdvInput"/>
+                <div class="fancy-title title-dotted-border title-center">
+                    <h4><span id="selected-day">Mercredi</span> <em id ="selected-date">17 septembre 2017</em> à <em id="selected-time">17:00</em></h4>
+                </div>
+                <button id="choose-date" disabled="disabled" type="submit" class="center-block add-to-cart button">Choisir ce créneau</button>
+            </form><!-- Product Single - Quantity & Cart Button End -->
+        </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('js/plugins/moment.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.locales.min.js') }}"></script>
+    {#<script type="text/javascript" src="{{ asset('js/plugins/moment.js') }}"></script>#}
+    <script type="text/javascript" src="{{ asset('js/plugins/moment-with-locales.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/moment-recur.js') }}"></script>
+    {#<script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.min.js') }}"></script>#}
+    {#<script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.locales.min.js') }}"></script>#}
+    <script type="text/javascript" src="{{ asset('js/plugins/bootstrap-datetimepicker.js') }}"></script>
+
     <script>
         jQuery(function($) {
 
+            var c = moment('22:00', 'HH:mm').recur().every(["Sunday", 1]).daysOfWeek().next(3);
+            var d = moment('19:00', 'HH:mm').recur().every(["Sunday", 1]).daysOfWeek().next(3);
 
+            var currentDate = moment(new Date).locale('fr');
+
+            $('#selected-day').text(currentDate.format('dddd'));
+            $('#selected-date').text(currentDate.format('DD MMMM YYYY'));
+            $('#selected-time').text(currentDate.format('HH:mm'));
+
+            $('#datetimepicker').datetimepicker({
+                inline: true,
+                sideBySide: true,
+                showClear: true,
+                locale: 'fr',
+                stepping: 30,
+                minDate: moment().add(3, 'day'),
+                maxDate: moment().add(1, 'year'),
+                daysOfWeekDisabled: [1, 2, 3, 4, 5],
+                disabledHours : [0, 1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23],
+            }).on('dp.change', function(e) {
+                var momentDate = moment(e.date);
+
+                $('#rdvInput').val(momentDate.format('YYYY-MM-DDTHH:mm:ss'));
+
+                $('#choose-date').prop('disabled', false);
+                $('#selected-day').text(momentDate.format('dddd'));
+                $('#selected-date').text(momentDate.format('DD MMMM YYYY'));
+                $('#selected-time').text(momentDate.format('HH:mm'));
+            });
+
+            console.log($('#datetimepicker').data("DateTimePicker").disabledDates());
+
+            {#
             $('#calendar').fullCalendar({
                 allDaySlot: false,
                 events: [{
@@ -139,6 +212,7 @@
                 e.stopImmediatePropagation();
                 return false;
             });
+            #}
         });
     </script>
 {% endblock %}

@@ -1,11 +1,11 @@
 {% set controller_name = app.request.attributes.get("_controller")|split('::')[0]|split('\\')[2] %}
 {% set action_name = app.request.attributes.get("_controller")|split('::')[1] %}
 <!DOCTYPE html>
-<html dir="ltr" lang="en-US">
+<html dir="ltr" lang="fr-FR">
 <head>
 
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="author" content="SemiColonWeb" />
+    <meta charset="UTF-8" />
+    <meta name="author" content="Steve David" />
 
     <!-- Stylesheets
     ============================================= -->
@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/animate.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}" type="text/css" />
+
     <style>
         .sticky-side-element {
             position: fixed;
@@ -43,6 +44,13 @@
 
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}" type="text/css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('images/manifest.json') }}">
+    <link rel="mask-icon" href="{{ asset('images/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <meta name="theme-color" content="#ffffff">
 
     <!-- Document Title
     ============================================= -->
@@ -217,9 +225,9 @@
                                 </ul>
                                 <ul class="mega-menu-column col-md-6">
                                     <li class="mega-menu-title text-center">
-                                        <a href="{{ path('rendez_vous_service', {distance: 1}) }}"><div>A distance</div></a>
+                                        <a href="{{ path('rendez_vous_service', {mode: 'a-distance'}) }}"><div>A distance</div></a>
                                         <div class="text-center">
-                                            <a href="{{ path('rendez_vous_service', {distance: 1}) }}"><img src="{{ asset('images/skype-icon.png') }}" style="width: 64px;"/></a>
+                                            <a href="{{ path('rendez_vous_service', {mode: 'a-distance'}) }}"><img src="{{ asset('images/skype-icon.png') }}" style="width: 64px;"/></a>
                                         </div>
                                     </li>
                                 </ul>
@@ -302,30 +310,32 @@
     </header><!-- #header end -->
 
 
-    {% for message in app.flashes('success') %}
-    <div class="style-msg successmsg ">
-        <div class="sb-msg"><i class="icon-thumbs-up"></i><strong>Ok!</strong> {{ message }}</div>
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    </div>
-    {% endfor %}
+    <div class="container clearfix" style="margin-top: 15px;">
+        {% for message in app.flashes('success') %}
+        <div class="style-msg successmsg ">
+            <div class="sb-msg"><i class="icon-thumbs-up"></i><strong>Ok!</strong> {{ message }}</div>
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        </div>
+        {% endfor %}
 
-    {% for message in app.flashes('error') %}
-    <div class="style-msg errormsg ">
-        <div class="sb-msg"><i class="icon-remove"></i><strong>Oops!</strong> {{ message }}</div>
-    </div>
-    {% endfor %}
+        {% for message in app.flashes('error') %}
+        <div class="style-msg errormsg ">
+            <div class="sb-msg"><i class="icon-remove"></i><strong>Oops!</strong> {{ message }}</div>
+        </div>
+        {% endfor %}
 
-    {% for message in app.flashes('notice') %}
-    <div class="style-msg infomsg ">
-        <div class="sb-msg"><i class="icon-info-sign"></i><strong>Ahem!</strong> {{ message }}</div>
-    </div>
-    {% endfor %}
+        {% for message in app.flashes('notice') %}
+        <div class="style-msg infomsg ">
+            <div class="sb-msg"><i class="icon-info-sign"></i><strong>Ahem!</strong> {{ message }}</div>
+        </div>
+        {% endfor %}
 
-    {% for message in app.flashes('alert') %}
-    <div class="style-msg alertmsg ">
-        <div class="sb-msg"><i class="icon-warning-sign"></i><strong>Heu..</strong> {{ message }}</div>
+        {% for message in app.flashes('alert') %}
+        <div class="style-msg alertmsg ">
+            <div class="sb-msg"><i class="icon-warning-sign"></i><strong>Heu..</strong> {{ message }}</div>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 
     {% block page_title %}
     {% endblock %}
@@ -407,11 +417,8 @@
 
 <script>
     jQuery(function($) {
-        $('a[href="#"]', 'a[href=""]').each(function() {
-            $(this).on('click', function(e) {
-                e.preventDefault();
-                alert('kikoo');
-            });
+        $('a[href="#"]').on('click', function(e) {
+            e.preventDefault();
         });
 
         $('ul#choix_rdv').find('img').each(function(k, v) {
