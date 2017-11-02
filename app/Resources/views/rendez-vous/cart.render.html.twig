@@ -1,7 +1,7 @@
 {% if cart != null %}
 <div id="top-cart">
     <a href="#" id="top-cart-trigger" style="width: 32px">
-        {% if cart.remoteMode == true %}
+        {% if cart.remote == true %}
             <img src="{{ asset('images/skype-icon-black.png') }}" style="width: 46px"/>
         {% else %}
             <img src="{{ asset('images/interview-icon-black.png') }}" style="width: 46px"/>
@@ -25,7 +25,7 @@
                         <p>
                             <a href="#">{{ cart.service.name }}</a>
                             <br/>
-                            <span class="top-cart-item-quantity" style="position: relative;">{{ cart.lengthForClient}} heure</span>
+                            <span class="top-cart-item-quantity" style="position: relative;">1 heure</span>
                         </p>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                     </div>
                     <div class="top-cart-item-desc">
                         {{ cart.appointment|localizeddate('medium', 'none', null, null, 'dd LLLL Y') }}
-                        <span class="top-cart-item-quantity">{{ cart.appointment|localizeddate('medium', 'none', null, null, 'HH:mm') }}</span>
+                        <span class="top-cart-item-quantity">{{ cart.appointment|date('H:i') }}</span>
                     </div>
                 </div>
                 {% else %}

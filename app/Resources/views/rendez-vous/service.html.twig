@@ -71,7 +71,7 @@
                                     <form method="post" action="{{ path('rendez_vous_calendrier') }}">
                                         <div class="product-overlay">
                                             <input type="hidden" name="idService" value="{{ service.id }}"/>
-                                            <input type="hidden" name="remoteMode" value="{{ cart.remoteMode}}"/>
+                                            <input type="hidden" name="remoteMode" value="{{ cart.remote}}"/>
                                             <button type="submit" class="btn-link" style="color: #333"><i class="icon-shopping-cart"></i><span> Choisir</span></button>
                                             <a href="{{ path('rendez_vous_service_details', {id: service.id}) }}" class="item-quick-view ajax-service" data-lightbox="ajax"><i class="icon-zoom-in2"></i><span> Voir</span></a>
                                         </div>

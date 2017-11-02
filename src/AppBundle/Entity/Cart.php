@@ -20,7 +20,7 @@ class Cart
     const PAYMENT_MODES = [
         self::MODE_CASH => [
             'icon' => 'icon-money',
-            'label' => 'Chèque ou liquide',
+            'label' => 'Chèque ou espèces',
         ],
         self::MODE_BANK_CARD => [
             'icon' => 'icon-credit-cards',
@@ -57,9 +57,9 @@ class Cart
     /**
      * @var string
      *
-     * @ORM\Column(name="id_session", type="string", nullable=false, unique=true)
+     * @ORM\Column(name="id_cookie", type="string", nullable=false, unique=true)
      */
-    private $idSession;
+    private $idCookie;
 
     /**
      * @var \DateTime
@@ -71,23 +71,9 @@ class Cart
     /**
      * @var bool
      *
-     * @ORM\Column(name="remote_mode", type="boolean")
+     * @ORM\Column(name="remote", type="boolean")
      */
-    private $remoteMode;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="length_for_client", type="float", nullable=true)
-     */
-    private $lengthForClient = 1;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="length_for_me", type="float", nullable=true)
-     */
-    private $lengthForMe = 1;
+    private $remote;
 
     /**
      * @var string
@@ -102,13 +88,6 @@ class Cart
      * @ORM\Column(name="paid", type="boolean")
      */
     private $paid = false;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="remote", type="boolean")
-     */
-    private $remote = false;
 
 
     public function __construct()
@@ -179,30 +158,25 @@ class Cart
         return $this;
     }
 
-
-
     /**
      * @return string
      */
-    public function getIdSession()
+    public function getIdCookie()
     {
-        return $this->idSession;
+        return $this->idCookie;
     }
 
     /**
-     * @param $idSession
+     * @param $idCookie
      *
      * @return $this
      */
-    public function setIdSession($idSession)
+    public function setIdCookie($idCookie)
     {
-        $this->idSession = $idSession;
+        $this->idCookie = $idCookie;
 
         return $this;
     }
-
-
-
 
     /**
      * Get appointment
@@ -211,77 +185,28 @@ class Cart
      */
     public function getAppointment()
     {
+
         return $this->appointment;
     }
 
     /**
      * @return bool
      */
-    public function isRemoteMode()
+    public function isRemote()
     {
-        return $this->remoteMode;
+        return $this->remote;
     }
 
     /**
-     * @param $remoteMode
+     * @param $remote
      *
      * @return $this
      */
-    public function setRemoteMode($remoteMode)
+    public function setRemote($remote)
     {
-        $this->remoteMode = $remoteMode;
+        $this->remote = $remote;
 
         return $this;
-    }
-
-
-
-    /**
-     * Set lengthForClient
-     *
-     * @param float $lengthForClient
-     *
-     * @return Cart
-     */
-    public function setLengthForClient($lengthForClient)
-    {
-        $this->lengthForClient = $lengthForClient;
-
-        return $this;
-    }
-
-    /**
-     * Get lengthForClient
-     *
-     * @return float
-     */
-    public function getLengthForClient()
-    {
-        return $this->lengthForClient;
-    }
-
-    /**
-     * Set lengthForMe
-     *
-     * @param float $lengthForMe
-     *
-     * @return Cart
-     */
-    public function setLengthForMe($lengthForMe)
-    {
-        $this->lengthForMe = $lengthForMe;
-
-        return $this;
-    }
-
-    /**
-     * Get lengthForMe
-     *
-     * @return float
-     */
-    public function getLengthForMe()
-    {
-        return $this->lengthForMe;
     }
 
     /**
@@ -330,30 +255,6 @@ class Cart
     public function getPaid()
     {
         return $this->paid;
-    }
-
-    /**
-     * Set remote
-     *
-     * @param boolean $remote
-     *
-     * @return Cart
-     */
-    public function setRemote($remote)
-    {
-        $this->remote = $remote;
-
-        return $this;
-    }
-
-    /**
-     * Get remote
-     *
-     * @return bool
-     */
-    public function getRemote()
-    {
-        return $this->remote;
     }
 }
 

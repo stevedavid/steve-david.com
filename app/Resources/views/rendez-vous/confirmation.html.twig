@@ -46,7 +46,7 @@
                         <tbody>
                         <tr class="cart_item">
                             <td>
-                                {% if cart.remoteMode == true %}
+                                {% if cart.remote == true %}
                                     <img width="48" src="{{ asset('images/skype-icon-black.png') }}"/>
                                 {% else %}
                                     <img width="48" src="{{ asset('images/interview-icon-black.png') }}"/>
@@ -61,7 +61,7 @@
                                 <div class="quantity clearfix">
                                     {{ cart.service.name }}
                                     <br/>
-                                    {% if cart.remoteMode == true %}
+                                    {% if cart.remote == true %}
                                         <small>(à distance)</small>
                                     {% else %}
                                         <small>(en face à face)</small>
@@ -115,7 +115,7 @@
 
                             <td class="cart-product-quantity">
                                 <div class="quantity clearfix">
-                                    {{ cart.appointment|localizeddate('medium', 'none', null, null, 'HH:mm') }}
+                                    {{ cart.appointment|date('H:i') }}
                                 </div>
                             </td>
 
@@ -204,8 +204,11 @@
 
         <div class="row">
             <div class="col-sx-12 section nobottommargin notopmargin notoppadding nobottompadding">
-                <div class="text-center col-md-12">{{ form_row(form.submit) }}</div>
-                <div id="paypal-button"></div>
+                {% if cart.payment == constant('AppBundle\\Entity\\Cart::MODE_CASH') %}
+                    <div class="text-center col-md-12 ">{{ form_row(form.submit) }}</div>
+                {% else %}
+                    <div id="paypal-button"></div>
+                {% endif %}
             </div>
         </div>
     {{ form_end(form) }}
@@ -214,39 +217,41 @@
 {% endblock %}
 
 {% block javascripts %}
-<script src="https://www.paypalobjects.com/api/checkout.js"></script>
-<script>
-    paypal.Button.render({
+    {% if cart.payment is not constant('AppBundle\\Entity\\Cart::MODE_CASH')  %}
+        <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+        <script>
+            paypal.Button.render({
 
-        env: 'sandbox', // Or 'sandbox'
+                env: 'sandbox', // Or 'sandbox'
 
-        client: {
-            sandbox:    'ASnsGdfd4QeEn08p61Lc73zVFPC6z3dm4o_JrfS9_4pDOlWYqpCqSjaOmCEQdCXlhvydFersKVR3U7My',
-            production: ''
-        },
+                client: {
+                    sandbox:    'ASnsGdfd4QeEn08p61Lc73zVFPC6z3dm4o_JrfS9_4pDOlWYqpCqSjaOmCEQdCXlhvydFersKVR3U7My',
+                    production: ''
+                },
 
-        commit: true, // Show a 'Pay Now' button
+                commit: false, // Show a 'Pay Now' button
 
-        payment: function(data, actions) {
-            return actions.payment.create({
-                payment: {
-                    transactions: [
-                        {
-                            amount: { total: '{{ cart.service.price }}', currency: 'EUR' }
+                payment: function(data, actions) {
+                    return actions.payment.create({
+                        payment: {
+                            transactions: [
+                                {
+                                    amount: { total: '{{ cart.service.price }}', currency: 'EUR' }
+                                }
+                            ]
                         }
-                    ]
+                    });
+                },
+
+                onAuthorize: function(data, actions) {
+                    return actions.redirect();
+                },
+
+                onCancel: function(data, actions) {
+                    return actions.redirect();
                 }
-            });
-        },
 
-        onAuthorize: function(data, actions) {
-            return actions.redirect();
-        },
-
-        onCancel: function(data, actions) {
-            return actions.redirect();
-        }
-
-    }, '#paypal-button');
-</script>
+            }, '#paypal-button');
+        </script>
+    {% endif %}
 {% endblock %}

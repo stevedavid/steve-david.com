@@ -1,6 +1,6 @@
 {% extends '::base.html.twig' %}
 
-{% set remote_rdv = cart.service.remoteMode == true and cart.remoteMode == true %}
+{% set remote_rdv = cart.service.remoteMode == true and cart.remote == true %}
 
 {% block cart %}
     {{ render(controller('AppBundle:RendezVous:cart')) }}
@@ -25,6 +25,8 @@
             padding: 5px;
             border-radius: 5px;
         }
+
+        button[disabled], button[disabled]:hover { background-color: #c5c5c5; cursor: not-allowed }
     </style>
 {% endblock %}
 
@@ -66,7 +68,7 @@
                         </div>
                     </div>
 
-                    <div class="col_one_third nobottommargin">
+                    <div class="col_one_third nobottommargin payment-disabled">
                         <div class="feature-box fbox-plain fbox-dark fbox-small">
                             <div class="fbox-icon">
                                 <i class="icon-credit-cards"></i>
@@ -81,7 +83,7 @@
                         </div>
                     </div>
 
-                    <div class="col_one_third nobottommargin col_last">
+                    <div class="col_one_third nobottommargin col_last payment-disabled">
                         <div class="feature-box fbox-plain fbox-dark fbox-small">
                             <div class="fbox-icon">
                                 <i class="icon-paypal"></i>
@@ -100,10 +102,31 @@
             </div>
             <div class="row">
                 <div class="col-sx-12 section nobottommargin notopmargin notoppadding nobottompadding">
-                    <div class="text-center col-md-12"><button type="submit" class="center-block add-to-cart button nomargin" readonly="readonly">Choisir</button></div>
+                    <div class="text-center col-md-12">
+                        <button type="submit" class="center-block add-to-cart button nomargin" disabled="disabled" id="choose-payment">Choisir</button>
+                    </div>
                 </div>
             </div>
         </form>
+    </div>
+
+    <div class="modal1 mfp-hide" id="choixPayment">
+        <div class="block divcenter" style="background-color: #FFF; max-width: 500px;">
+            <div class="center row" style="padding: 50px;">
+                <h3>Vous souhaitez commander une séance par Skype ?</h3>
+                <div class="col-md-6 text-center">
+                    <img src="{{ asset('images/skype-icon-black.png') }}" style="width: 78px;"/>
+
+                </div>
+                <div class="col-md-6 text-center">
+                    <p>Aucun système de paiement en ligne n'est actuellement disponible sur ce site</p>
+                    <p>Contactez-moi au plus vite au <strong>0781-350-383</strong> ou sur <a href="{{ path('contact') }}">ce formulaire de contact</a> afin que nous mettions en place le rendez-vous.</p>
+                </div>
+                <div class="col-md-12 text-center topmargin">
+                    <button  class="center-block add-to-cart button" id="contactMe">Me contacter</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}
@@ -111,7 +134,12 @@
 {% block javascripts %}
     <script>
         jQuery(function($) {
-            $('.col_one_third').css('cursor', 'pointer').on('click', function() {
+
+            $('#contactMe').on('click', function() {
+                window.location.href = '{{ path('contact') }}';
+            });
+
+            $('.col_one_third:not(.payment-disabled)').css('cursor', 'pointer').on('click', function() {
                 $(this).find('input').prop('checked', true);
             }).hover(function() {
                 $(this).css('backgroundColor', '#eaeaea');
@@ -122,9 +150,29 @@
 
             $('[rel=tooltip]').tooltip();
 
-            $('.col_one_third').on('click', function() {
-                 $('button[type=submit]').prop('disabled', false);
+            $('input[type=radio]').on('click', function() {
+                 $('#choose-payment').prop('disabled', false);
             });
+
+            if ($('.payment-disabled').length == 3) {
+                window.setTimeout(function() {
+
+                    $.magnificPopup.open({
+                        items: { src: '#choixPayment' },
+                        type: 'inline',
+                        midClick: true,
+                        closeOnBgClick: true,
+                        mainClass: 'mfp-no-margins mfp-fade',
+                        closeBtnInside: false,
+                        fixedContentPos: false,
+                        removalDelay: 500,
+
+                    });
+
+                }, 2000);
+            }
+
+
         });
     </script>
 {% endblock %}

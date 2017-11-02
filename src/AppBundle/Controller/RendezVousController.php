@@ -9,7 +9,9 @@ use PayPal\Api\Item;
 use PayPal\Api\Payer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
@@ -19,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class RendezVousController extends Controller
 {
     const PAYMENT_MODES = [Cart::MODE_CASH, Cart::MODE_BANK_CARD, Cart::MODE_PAYPAL];
+    const REMOTE = 'a-distance';
 
     /**
      * @Route("/prendre-rendez-vous/service/{mode}", name="rendez_vous_service", defaults={"mode": "face-a-face"}, requirements={"mode": "a-distance|face-a-face"})
@@ -27,51 +30,74 @@ class RendezVousController extends Controller
      */
     public function serviceAction($mode)
     {
-        $session = new Session();
+        // Initialisation;
         $doctrine = $this->get('doctrine');
+        $response = new Response();
         $request = Request::createFromGlobals();
+        $distance = $mode == 'a-distance';
+
+        // Récupération du panier;
+        $cart = $this->getCart($response);
+        $cart->setService(null)->setAppointment(null)->setPayment(null);
+
+        // Saisie du mode du rendez-vous (à distance ou en face-à-face);
+        $em = $this->getDoctrine()->getManager();
+        $cart->setRemote($distance);
+        $em->persist($cart);
+        $em->flush();
+
+        // Récupération des services;
         $categories = $doctrine->getRepository('AppBundle:Category')->findAll();
 
-        /** @var Cart $cart */
-        $cart = $doctrine->getRepository('AppBundle:Cart')->findOneByIdSession($session->getId());
-
-        $em = $doctrine->getEntityManager();
-
-        $distance =  $mode == 'a-distance';
-
-        if (empty($cart)) {
-            $cart = (new Cart)
-                ->setIdSession($session->getId())
-                ->setRemoteMode($distance);
-
-            $em->persist($cart);
-
-            $em->flush();
-
-        } else {
-
-            if (!empty($cart->getService()) && !$cart->getService()->getRemoteMode() && $distance) {
-                throw new ConflictHttpException('Le service sélectionné « ' . $cart->getService()->getName() . ' » n\'est pas compatible avec la consultation à distance.');
-            }
-
-            $cart
-                ->setRemoteMode($distance)
-                ->setService(null)
-                ->setAppointment(null)
-                ->setPayment(null)
-            ;
-
-            $em->persist($cart);
-            $em->flush();
-        }
-
-
-
-        return $this->render('rendez-vous/service.html.twig', [
+        // Création de la vue;
+        $response->setContent($this->renderView('rendez-vous/service.html.twig', [
             'categories' => $categories,
             'service_a_distance' => $distance,
             'cart' => $cart,
-        ]);
+        ]));
+
+        // Envoie de la réponse;
+        return $response;
+    }
+
+    private function getCart(&$response)
+    {
+        $request = Request::createFromGlobals();
+        $doctrine = $this->get('doctrine');
+        $uniqid = uniqid();
+        $distance = $request->request->get('mode') == self::REMOTE;
+
+        $cookie = $request->cookies->get('appointment');
+        $em = $doctrine->getManager();
+
+        if (count($cookie)) {
+
+            $cookie = json_decode($cookie);
+            $cart = $doctrine->getRepository('AppBundle:Cart')->findOneByIdCookie($cookie->uniqid);
+
+            if (!is_null($request->request->get('mode'))) {
+                $cart->setRemote($distance);
+            }
+
+            return $cart;
+        }
+
+        $newCookie = new Cookie('appointment', json_encode([
+            'uniqid' => $uniqid,
+            'ip' => $request->getClientIp(),
+        ]));
+        $response->headers->setCookie($newCookie);
+
+        $cart = (new Cart)
+            ->setIdCookie($uniqid)
+            ->setRemote($distance);
+
+        $em->persist($cart);
+
+        $em->flush();
+
+        return $cart;
+
     }
 
     /**
@@ -81,36 +107,35 @@ class RendezVousController extends Controller
      */
     public function calendrierAction()
     {
-        $session = new Session();
+        // Initialisation;
+        $response = new Response();
         $request = Request::createFromGlobals();
         $doctrine = $this->get('doctrine');
         $idService = $request->request->get('idService');
-        $remoteMode = $request->request->get('remoteMode');
 
-        if (!empty($idService)) {
-            $service = $doctrine->getRepository('AppBundle:Service')->findOneById($idService);
-            $cart = $doctrine->getRepository('AppBundle:Cart')->findOneByIdSession($session->getId());
+        // Récupération du panier;
+        $cart = $this->getCart($response);
 
-            $em = $doctrine->getEntityManager();
 
-            if (empty($cart)) {
-
-                $cart = (new Cart)
-                    ->setRemoteMode($remoteMode)
-                    ->setIdSession($session->getId())
-                    ->setService($service);
-
-            } else {
-                $cart->setService($service);
-            }
-
-            $em->persist($cart);
-
-            $em->flush();
+        // Remise à zéro du rendez-vous si renseigné;
+        if ($cart->getAppointment()) {
+            $cart->setAppointment(null);
         }
 
+        // Mise au panier du service choisi;
+        $service = $doctrine->getRepository('AppBundle:Service')->findOneById($idService);
 
-        return $this->render('rendez-vous/calendrier.html.twig');
+        $em = $doctrine->getManager();
+        $cart->setService($service);
+
+        // Sauvegarde du panier;
+        $em->persist($cart);
+        $em->flush();
+
+
+        // Rendu de la vue
+        $response->setContent($this->renderView('rendez-vous/calendrier.html.twig'));
+        return $response;
     }
 
     /**
@@ -120,24 +145,28 @@ class RendezVousController extends Controller
      */
     public function choixPaiementAction()
     {
-        $session = new Session();
         $doctrine = $this->get('doctrine');
         $em = $doctrine->getEntityManager();
+        $response = new Response();
         $request = Request::createFromGlobals();
 
-        $rdvDatetime = $request->request->get('rdv');
-        /** @var Cart $cart */
-        $cart = $doctrine->getRepository('AppBundle:Cart')->findOneByIdSession($session->getId());
 
-        if (empty($cart)) {
-            throw new AccessDeniedHttpException('Erreur : vous n\'avez pas de commande enregistrée.');
+
+        $cart = $this->getCart($response);
+
+        if (!$cart->getService()) {
+            throw new AccessDeniedHttpException('Erreur : vous n\'avez pas réalisé l\'étape 2 de la commande');
         }
 
-        $cart->setAppointment(new \DateTime($rdvDatetime));
+        if (!is_null($rdvTime = $request->request->get('rdv'))) {
+            $rdvDatetime = $rdvTime;
 
-        $em->persist($cart);
+            $apointment = new \DateTime($rdvDatetime);
+            $cart->setAppointment($apointment);
+            $em->persist($cart);
+            $em->flush();
+        }
 
-        $em->flush();
 
         return $this->render('rendez-vous/choix_paiement.html.twig', [
             'cart' => $cart,
@@ -149,9 +178,9 @@ class RendezVousController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirmationAction()
+    public function confirmationAction(\Swift_Mailer $mailer)
     {
-        $session = new Session();
+        $response = new Response();
         $doctrine = $this->get('doctrine');
         $em = $doctrine->getEntityManager();
         $request = Request::createFromGlobals();
@@ -161,10 +190,10 @@ class RendezVousController extends Controller
         dump($paymentMode);
 
         /** @var Cart $cart */
-        $cart = $doctrine->getRepository('AppBundle:Cart')->findOneByIdSession($session->getId());
+        $cart = $this->getCart($response);
 
-        if (empty($cart)) {
-            throw new AccessDeniedHttpException('Erreur : vous n\'avez pas de commande enregistrée.');
+        if (!$cart->getAppointment()) {
+            throw new AccessDeniedHttpException('Erreur : vous n\'avez pas réalisé l\'étape 3 de la commande');
         }
 
         if ($paymentMode != null && in_array($paymentMode, self::PAYMENT_MODES)) {
@@ -177,11 +206,39 @@ class RendezVousController extends Controller
             throw new HttpException(500);
         }
 
+        dump($cart->getPayment());
+
         $form = $this->createForm(CommandeType::class, null, [
             'attr' => [
-                'action' => $this->generateUrl('rendez_vous_payer'),
+//                'action' => $this->generateUrl('rendez_vous_payer'),
             ],
+        ], [
+            'isCash' => $cart->getPayment() == Cart::MODE_CASH,
         ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+//            $data = $form->getData();
+
+            $message = (new \Swift_Message('Hello Email'))
+                ->setFrom('no-reply@steve-david.com')
+                ->setTo('recipient@example.com')
+                ->setBody(
+                    $this->renderView(
+                        'emails/commande.html.twig',
+                        ['commande' => $form->getData(), 'cart' => $cart],
+//                    ),
+                    'text/html')
+                );
+
+            $mailer->send($message);
+
+            return $this->redirectToRoute('rendez_vous_payer');
+
+
+        }
 
         return $this->render('rendez-vous/confirmation.html.twig', [
             'cart' => $cart,
@@ -197,11 +254,12 @@ class RendezVousController extends Controller
     public function goToPayAction()
     {
         $session = new Session();
+        $response = new Response();
         $doctrine = $this->get('doctrine');
         $em = $doctrine->getEntityManager();
 
         /** @var Cart $cart */
-        $cart = $doctrine->getRepository('AppBundle:Cart')->findOneByIdSession($session->getId());
+        $cart = $this->getCart($response);
 
         if (!empty($cart)) {
 
@@ -223,6 +281,13 @@ class RendezVousController extends Controller
             $cart->setPaid(true);
             $em->persist($cart);
             $em->flush();
+
+
+
+            $response->headers->clearCookie('appointment');
+
+            $response->send();
+
         }
 
 
@@ -249,18 +314,23 @@ class RendezVousController extends Controller
     {
 
         $session = new Session();
+        $response = new Response();
         $request = Request::createFromGlobals();
         $doctrine = $this->get('doctrine');
         $em = $doctrine->getEntityManager();
 
-        $cart = $doctrine->getRepository('AppBundle:Cart')->findOneByIdSession($session->getId());
+        $cart = $this->getCart($response);
 
         if (!empty($cart)) {
             $em->remove($cart);
             $em->flush();
         }
 
+        $response->headers->clearCookie('appointment');
+
         $session->getFlashBag()->add('success', 'Rendez-vous annulé');
+
+        $response->send();
 
         return $this->redirectToRoute('accueil');
     }
@@ -273,11 +343,24 @@ class RendezVousController extends Controller
     public function cartAction()
     {
         $doctrine = $this->get('doctrine');
-        $session = new Session();
 
-        $cart = $doctrine->getRepository('AppBundle:Cart')->findOneByIdSession($session->getId());
+        $request = Request::createFromGlobals();
+        $cookie = $request->cookies->get('appointment');
+
+        dump($cookie);
+
+        if (count($cookie)) {
+
+            $cookie = json_decode($cookie);
+            $cart = $doctrine->getRepository('AppBundle:Cart')->findOneByIdCookie($cookie->uniqid);
+
+        } else {
+            $cart = null;
+        }
+
 
         if (!is_null($cart)) {
+
             if (!is_null($cart->getService())) {
                 if (!is_null($cart->getAppointment())) {
                     if (!is_null($cart->getPayment())) {
@@ -295,9 +378,7 @@ class RendezVousController extends Controller
             $backlink = null;
         }
 
-        if ($cart->getPaid()) {
-            $cart = null;
-        }
+
 
 
         return $this->render('rendez-vous/cart.render.html.twig', [
@@ -313,7 +394,7 @@ class RendezVousController extends Controller
     {
 
         $request = Request::createFromGlobals();
-        $session = new Session();
+        $response = new Response();
 
         $idService = $request->get('id');
 
@@ -325,7 +406,7 @@ class RendezVousController extends Controller
         ]);
 
         /** @var Cart $cart */
-        $cart = $doctrine->getRepository('AppBundle:Cart')->findOneByIdSession($session->getId());
+        $cart = $this->getCart($response);
 
         return $this->render('rendez-vous/service-details.ajax.html.twig', [
             'cart' => $cart,

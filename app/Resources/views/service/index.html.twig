@@ -299,7 +299,7 @@
                     <img src="{{ asset('images/skype-icon-black.png') }}" style="width: 78px;"/>
                     <form method="post" enctype='multipart/form-data' action="{{ path('rendez_vous_calendrier') }}">
                         <input type="hidden" name="idService" value="{{ service.id }}"/>
-                        <input type="hidden" name="remoteMode" value="1"/>
+                        <input type="hidden" name="mode" value="a-distance"/>
                         <button type="submit" class="add-to-cart button topmargin">A distance</button>
                     </form><!-- Product Single - Quantity & Cart Button End -->
                 </div>

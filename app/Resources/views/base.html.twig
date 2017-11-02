@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/animate.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}" type="text/css" />
+
     <style>
         .sticky-side-element {
             position: fixed;
@@ -309,30 +310,32 @@
     </header><!-- #header end -->
 
 
-    {% for message in app.flashes('success') %}
-    <div class="style-msg successmsg ">
-        <div class="sb-msg"><i class="icon-thumbs-up"></i><strong>Ok!</strong> {{ message }}</div>
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    </div>
-    {% endfor %}
+    <div class="container clearfix" style="margin-top: 15px;">
+        {% for message in app.flashes('success') %}
+        <div class="style-msg successmsg ">
+            <div class="sb-msg"><i class="icon-thumbs-up"></i><strong>Ok!</strong> {{ message }}</div>
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        </div>
+        {% endfor %}
 
-    {% for message in app.flashes('error') %}
-    <div class="style-msg errormsg ">
-        <div class="sb-msg"><i class="icon-remove"></i><strong>Oops!</strong> {{ message }}</div>
-    </div>
-    {% endfor %}
+        {% for message in app.flashes('error') %}
+        <div class="style-msg errormsg ">
+            <div class="sb-msg"><i class="icon-remove"></i><strong>Oops!</strong> {{ message }}</div>
+        </div>
+        {% endfor %}
 
-    {% for message in app.flashes('notice') %}
-    <div class="style-msg infomsg ">
-        <div class="sb-msg"><i class="icon-info-sign"></i><strong>Ahem!</strong> {{ message }}</div>
-    </div>
-    {% endfor %}
+        {% for message in app.flashes('notice') %}
+        <div class="style-msg infomsg ">
+            <div class="sb-msg"><i class="icon-info-sign"></i><strong>Ahem!</strong> {{ message }}</div>
+        </div>
+        {% endfor %}
 
-    {% for message in app.flashes('alert') %}
-    <div class="style-msg alertmsg ">
-        <div class="sb-msg"><i class="icon-warning-sign"></i><strong>Heu..</strong> {{ message }}</div>
+        {% for message in app.flashes('alert') %}
+        <div class="style-msg alertmsg ">
+            <div class="sb-msg"><i class="icon-warning-sign"></i><strong>Heu..</strong> {{ message }}</div>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 
     {% block page_title %}
     {% endblock %}
