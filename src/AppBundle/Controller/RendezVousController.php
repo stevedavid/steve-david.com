@@ -206,7 +206,6 @@ class RendezVousController extends Controller
             throw new HttpException(500);
         }
 
-        dump($cart->getPayment());
 
         $form = $this->createForm(CommandeType::class, null, [
             'attr' => [
