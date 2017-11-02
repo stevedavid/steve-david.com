@@ -187,8 +187,6 @@ class RendezVousController extends Controller
 
         $paymentMode = $request->request->get('choix_paiement');
 
-        dump($paymentMode);
-
         /** @var Cart $cart */
         $cart = $this->getCart($response);
 
@@ -205,8 +203,6 @@ class RendezVousController extends Controller
         if(!in_array($paymentMode, self::PAYMENT_MODES) && !empty($paymentMode)) {
             throw new HttpException(500);
         }
-
-        dump($cart->getPayment());
 
         $form = $this->createForm(CommandeType::class, null, [
             'attr' => [
