@@ -204,11 +204,7 @@ class RendezVousController extends Controller
             throw new HttpException(500);
         }
 
-        $form = $this->createForm(CommandeType::class, null, [
-            'attr' => [
-//                'action' => $this->generateUrl('rendez_vous_payer'),
-            ],
-        ], [
+        $form = $this->createForm(CommandeType::class, null, [], [
             'isCash' => $cart->getPayment() == Cart::MODE_CASH,
         ]);
 
@@ -216,11 +212,10 @@ class RendezVousController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-//            $data = $form->getData();
 
             $message = (new \Swift_Message('Hello Email'))
                 ->setFrom('no-reply@steve-david.com')
-                ->setTo('recipient@example.com')
+                ->setTo('hello@steve-david.com')
                 ->setBody(
                     $this->renderView(
                         'emails/commande.html.twig',
