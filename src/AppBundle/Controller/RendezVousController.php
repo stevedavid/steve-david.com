@@ -343,8 +343,6 @@ class RendezVousController extends Controller
         $request = Request::createFromGlobals();
         $cookie = $request->cookies->get('appointment');
 
-        dump($cookie);
-
         if (count($cookie)) {
 
             $cookie = json_decode($cookie);
