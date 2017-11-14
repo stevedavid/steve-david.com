@@ -215,14 +215,16 @@ class RendezVousController extends Controller
 
             $message = (new \Swift_Message('Hello Email'))
                 ->setFrom('no-reply@steve-david.com')
+                ->setSubject('Nouvelle commande !')
                 ->setTo('hello@steve-david.com')
                 ->setBody(
                     $this->renderView(
                         'emails/commande.html.twig',
-                        ['commande' => $form->getData(), 'cart' => $cart],
-//                    ),
-                    'text/html')
-                );
+                        ['commande' => $form->getData(), 'cart' => $cart]
+                    ),
+                    'text/html'
+                )
+            ;
 
             $mailer->send($message);
 
@@ -282,7 +284,7 @@ class RendezVousController extends Controller
         }
 
 
-//        $session->getFlashBag()->add('success', 'Commande validée.');
+        $session->getFlashBag()->add('success', 'Votre réservation a bien été enregistrée. Je prends contact avec vous rapidement.');
 
         return $this->redirectToRoute('accueil');
     }

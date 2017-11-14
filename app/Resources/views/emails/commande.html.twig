@@ -4,7 +4,7 @@
     Une commande vient d'être passée sur steve-david.com.
 </p>
 <p>
-    <strong>{{ commande.name ~ ' ' ~ commande.lastname }}</strong> souhaite prendre rendez-vous le <strong>{{ cart.appointment|date('d/M/Y à H:i') }}</strong>.
+    <strong>{{ commande.name ~ ' ' ~ commande.lastname }}</strong> souhaite prendre rendez-vous le <strong>{{ cart.appointment|date('d/M/Y H:i') }}</strong>.
     <br/>
     Vous pouvez envoyer un mail à <strong>{{ commande.email }}</strong> ou téléphoner au <strong>{{ commande.phone }}</strong>.
     <br/>
