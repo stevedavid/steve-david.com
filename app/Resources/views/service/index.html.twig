@@ -2,6 +2,13 @@
 
 {% block title %}{{ service.name }}{% endblock %}
 
+{% block meta %}
+    <meta property="og:title" content="{{ service.name }} / Steve DAVID - thérapeute holistique">
+    <meta property="og:image" content="{{ 'images/services/' ~ service.image }}">
+    <meta property="og:description" content="{{ service.shortDescription }}">
+
+{% endblock %}
+
 {% block page_title %}
     {% include 'index/page_title.html.twig' with {
     page_title: service.name,
