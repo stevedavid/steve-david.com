@@ -4,8 +4,8 @@
 
 {% block meta %}
     <meta property="og:title" content="{{ service.name }} / Steve DAVID - thérapeute holistique">
-    <meta property="og:image" content="{{ 'images/services/' ~ service.image }}">
-    <meta property="og:description" content="{{ service.shortDescription }}">
+    <meta property="og:image" content="{{ asset('images/services/' ~ service.image) }}">
+    <meta property="og:description" content="{{ service.shortDescription|split('\n')[0]|striptags  }}">
 
 {% endblock %}
 
