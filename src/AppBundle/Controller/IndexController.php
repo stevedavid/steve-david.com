@@ -6,6 +6,7 @@ use AppBundle\Form\ContactType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class IndexController extends Controller
 {
@@ -36,9 +37,10 @@ class IndexController extends Controller
     /**
      * @Route("/contact", name="contact")
      */
-    public function contactAction()
+    public function contactAction(\Swift_Mailer $mailer)
     {
         $captchaError = null;
+        $session = new Session();
         $captchaReturn['success'] = false;
         $formSuccess = false;
 
@@ -78,7 +80,23 @@ class IndexController extends Controller
         if ($form->isSubmitted() && $form->isValid() && $captchaReturn['success']) {
 
             $data = $form->getData();
-            $formSuccess = true;
+            $message = (new \Swift_Message('Demande d\'informations'))
+                ->setFrom('no-reply@steve-david.com')
+                ->setTo('hello@steve-david.com')
+                ->setBody(
+                    $this->renderView(
+                        'emails/contact.html.twig',
+                        ['contact' => $form->getData()]
+                    ),
+                    'text/html'
+                )
+            ;
+
+            $mailer->send($message);
+
+            $session->getFlashBag()->add('success', 'Votre demande de contact a bien été envoyée. Je reviens vers vous rapidement.');
+
+            return $this->redirectToRoute('accueil');
         }
 
         return $this->render('index/contact.html.twig', [

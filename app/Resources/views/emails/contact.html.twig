@@ -1,0 +1,23 @@
+<p>Bonjour</p>
+<p>
+    <strong>{{ contact.name }}</strong> souhaite obtenir plus d'informations
+    {% if contact.service is not null %}
+        sur le service {{ contact.service.name }}
+    {% endif %}
+    .
+</p>
+<p>
+    <strong>{{ contact.subject }}</strong>
+    <br/>
+    <span style="font-style: italic">{{ contact.content }}</span>
+</p>
+<hr/>
+<ul>
+    <li>Téléphone : {% if contact.phone is not null %}{{ contact.phone }}{% else %}non renseigné{% endif %}</li>
+    <li>Email : {{ contact.email }}</li>
+</ul>
+<p>
+    Cordialement,
+    <br/>
+    Un robot.
+</p>

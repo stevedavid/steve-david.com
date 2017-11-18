@@ -213,9 +213,8 @@ class RendezVousController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
 
-            $message = (new \Swift_Message('Hello Email'))
+            $message = (new \Swift_Message('Nouvelle commande !'))
                 ->setFrom('no-reply@steve-david.com')
-                ->setSubject('Nouvelle commande !')
                 ->setTo('hello@steve-david.com')
                 ->setBody(
                     $this->renderView(
