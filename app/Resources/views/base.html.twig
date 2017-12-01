@@ -45,6 +45,13 @@
             -o-transform: rotate(270deg);
             transform: rotate(270deg);
         }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
     </style>
     {% block stylesheets %}{% endblock %}
 
@@ -317,7 +324,7 @@
     </header><!-- #header end -->
 
 
-    <div class="container clearfix" style="margin-top: 15px;">
+    <div class="container clearfix">
         {% for message in app.flashes('success') %}
         <div class="style-msg successmsg ">
             <div class="sb-msg"><i class="icon-thumbs-up"></i><strong>Ok!</strong> {{ message }}</div>
@@ -446,6 +453,7 @@
                  $(this).attr('src', '{{ asset('images/interview_icon_black.png') }}')
              }, function() {});
         });
+
     });
 </script>
 {% block javascripts %}{% endblock %}

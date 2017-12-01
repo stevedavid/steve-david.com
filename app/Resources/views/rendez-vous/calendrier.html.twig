@@ -4,8 +4,9 @@
 
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" />
+    {#<link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" />#}
     <link rel="stylesheet" href="{{ asset('css/custom_css.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/fullcalendar.min.css') }}">
 
     <style>
         .fc-agenda-slots td div { height: 100px !important; }
@@ -43,6 +44,11 @@
         th.picker-switch[title="Select Year"] {
             pointer-events: none;
         }
+
+        .fc-event {
+            width: 103%;
+            margin-left: -3px;
+        }
     </style>
 {% endblock %}
 
@@ -53,7 +59,7 @@
 {% block page_title %}
     {% include 'index/page_title.html.twig' with {
     page_title: 'Prendre un rendez-vous',
-    page_subtitle: 'Choisi  ssez maintenant un créneau horaire.',
+    page_subtitle: 'Choisissez maintenant un créneau horaire.',
     steps: [{
         name: 'Prendre un rendez-vous'
     }, {
@@ -67,7 +73,7 @@
         {% include 'rendez-vous/etapes.inc.html.twig' with {step: 2}%}
 
         <div class="events-calendar nobottommargin">
-            <div id="datetimepicker" class="fc-calendar-container "></div>
+            <div id="calendar" class="fc-calendar-container "></div>
             {#<input type="text" id="datetimepicker" disabled="disabled"/>#}
         </div>
 
@@ -84,18 +90,17 @@
 {% endblock %}
 
 {% block javascripts %}
-    {#<script type="text/javascript" src="{{ asset('js/plugins/moment.js') }}"></script>#}
+    <script type="text/javascript" src="{{ asset('js/plugins/moment.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/plugins/moment-with-locales.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/plugins/moment-recur.js') }}"></script>
-    {#<script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.min.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.locales.min.js') }}"></script>#}
-    <script type="text/javascript" src="{{ asset('js/plugins/bootstrap-datetimepicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.locales.min.js') }}"></script>
+    {#<script type="text/javascript" src="{{ asset('js/plugins/bootstrap-datetimepicker.js') }}"></script>#}
 
     <script>
         jQuery(function($) {
 
-            var c = moment('22:00', 'HH:mm').recur().every(["Sunday", 1]).daysOfWeek().next(3);
-            var d = moment('19:00', 'HH:mm').recur().every(["Sunday", 1]).daysOfWeek().next(3);
+            moment.locale('fr');
 
             var currentDate = moment(new Date).locale('fr');
 
@@ -103,30 +108,14 @@
             $('#selected-date').text(currentDate.format('DD MMMM YYYY'));
             $('#selected-time').text(currentDate.format('HH:mm'));
 
-            $('#datetimepicker').datetimepicker({
-                inline: true,
-                sideBySide: true,
-                showClear: true,
-                locale: 'fr',
-                stepping: 30,
-                minDate: moment().add(3, 'day'),
-                maxDate: moment().add(1, 'year'),
-                daysOfWeekDisabled: [1, 2, 3, 4, 5],
-                disabledHours : [0, 1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23],
-            }).on('dp.change', function(e) {
-                var momentDate = moment(e.date);
 
-                $('#rdvInput').val(momentDate.format('YYYY-MM-DDTHH:mm:ss'));
+            function updateRdvSlot(event) {
+                $('#selected-day').text(moment(event.start).format('dddd'));
+                $('#selected-date').text(moment(event.start).format('DD MMMM YYYY'));
+                $('#selected-time').text(moment(event.start).format('HH:mm'));
+                $('#rdvInput').val(moment(event.start).format('YYYY-MM-DDTHH:mm:ss'));
+            }
 
-                $('#choose-date').prop('disabled', false);
-                $('#selected-day').text(momentDate.format('dddd'));
-                $('#selected-date').text(momentDate.format('DD MMMM YYYY'));
-                $('#selected-time').text(momentDate.format('HH:mm'));
-            });
-
-            console.log($('#datetimepicker').data("DateTimePicker").disabledDates());
-
-            {#
             $('#calendar').fullCalendar({
                 allDaySlot: false,
                 events: [{
@@ -136,33 +125,50 @@
                     overlap: false,
                     dow: [1, 2, 3, 4, 5],
                     startEditable: false,
-                    start: '08:30:00',
-                    end: '18:30:00',
+                    start: '08:00:00',
+                    end: '19:00:00',
                     color: '#ecd5bb',
                     textColor: '#444',
-                    exceptWithin: [{
-                        start: moment('2017-10-16','YYYY-MM-DD'),
-                        end: moment('2017-10-30','YYYY-MM-DD'),
-                    }],
-                }],
+                    exceptWithin: [
+                    {% for slot in slots %}
+                        {
+                            start: moment('{{ slot.date|date('Y-m-d') }} 00:00','YYYY-MM-DD H:i'),
+                            end: moment('{{ slot.date|date('Y-m-d') }} 23:59','YYYY-MM-DD H:i'),
+                        },
+                    {% endfor %}
+                    ]
+                },
+                {% for slot in unavailable_slots %}
+                {
+                    start: moment('{{ slot.appointment|date('Y-m-d H:i') }}','YYYY-MM-DD H:i'),
+                    end: moment('{{ slot.appointment|date_modify("+1 hour")|date('Y-m-d H:i') }}','YYYY-MM-DD H:i'),
+                    color: '#636264',
+                    textColor: '#333333',
+                    title: 'Créneau indisponible',
+                    startEditable: false,
+                    draggable: false,
+                },
+                {% endfor %}
+                ],
                 eventRender: function(event){
-                    if (event.type == 'unavailable') {
-                        return (event.exceptWithin.filter(function(exceptWithin){
-
-                            return (event.start.isBefore(exceptWithin.start) || event.start.isAfter(exceptWithin.end));
-
-                        }).length) > 0;
-                    } else {
-                        return true;
+                    var render = true;
+                    if (event.type === 'unavailable') {
+                        $(event.exceptWithin).each(function(k, v) {
+                            if (event.start.isAfter(v.start, 'minute') && event.start.isBefore(v.end, 'minute')) {
+                                render = false;
+                            }
+                        });
                     }
+                    return render;
 
                 },
                 minTime: '07:00:00',
                 maxTime: '21:00:00',
                 height: 500,
+                disableDragging: true,
                 editable: false,
                 selectHelper: true,
-                selectOverlap: false,
+                selectOverlap: true,
                 eventStartEditable: true,
                 eventDurationEditable: false,
                 selectable: true,
@@ -170,37 +176,37 @@
                 aspectRatio: 0.95,
                 slotDuration: '01:00:00',
                 eventColor: '#8b786a',
-
                 defaultTimedEventDuration: '01:00:00',
                 header: {
                     left: 'today,next',
                     center: 'title',
-                    right: 'agendaWeek, month',
+                    right: '',
                 },
                 defaultView: 'agendaWeek',
                 locale: 'fr',
-                eventDrop: function(event) {
-                    $('#rdvInput').val(moment(event.start).format());
-                },
+                eventDrop: updateRdvSlot(event),
+                eventDragStop: updateRdvSlot(event),
                 unselect: function() {
-                    $('#calendar').fullCalendar('option', 'selectable', false);
+//                    $('#calendar').fullCalendar('option', 'selectable', false);
                 },
-                select: function(start, end, allDay) {
+                select: function(start) {
+                    $('#calendar').fullCalendar('removeEvents', 'rdv');
                     var newEvent = new Object();
                     newEvent.title = 'Votre rendez-vous';
                     newEvent.id = 'rdv';
                     newEvent.start = moment(start).format();
-                    newEvent.end = moment(end).format();
-                    newEvent.startEditable = true;
+                    newEvent.durationEditable = false;
+                    newEvent.end = moment(start).add(1, 'hour').format();
+                    newEvent.startEditable = false;
                     newEvent.allDay = false;
                     $('#calendar').fullCalendar('renderEvent', newEvent, true);
                     $('#calendar').fullCalendar('unselect');
                     $('button[type=submit]').prop('disabled', false);
-                    $('#rdvInput').val(newEvent.start);
+                    updateRdvSlot(newEvent);
                 },
                 selectAllow: function(selectInfo) {
-                    var duration = moment.duration(selectInfo.end.diff(selectInfo.start));
-                    return duration.asHours() <= 1;
+//                    var duration = moment.duration(selectInfo.end.diff(selectInfo.start));
+//                    return duration.asHours() <= 1;
                 },
             });
 
@@ -212,7 +218,7 @@
                 e.stopImmediatePropagation();
                 return false;
             });
-            #}
+
         });
     </script>
 {% endblock %}

@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 class RendezVousController extends Controller
 {
@@ -132,9 +133,21 @@ class RendezVousController extends Controller
         $em->persist($cart);
         $em->flush();
 
+        $slots = $doctrine->getRepository('AppBundle:Slot')->findBy([
+            'type' => 'unavailable',
+        ]);
+
+        $unavailableSlots = $doctrine->getRepository('AppBundle:Cart')->findBy([
+            'paid' => true,
+        ]);
+
 
         // Rendu de la vue
-        $response->setContent($this->renderView('rendez-vous/calendrier.html.twig'));
+        $response->setContent($this->renderView('rendez-vous/calendrier.html.twig', [
+            'slots' => $slots,
+            'unavailable_slots' => $unavailableSlots,
+        ]));
+
         return $response;
     }
 
@@ -384,23 +397,31 @@ class RendezVousController extends Controller
     {
 
         $request = Request::createFromGlobals();
-        $response = new Response();
 
-        $idService = $request->get('id');
+        if ($request->isXmlHttpRequest()) {
+            $response = new Response();
 
-        $doctrine = $this->get('doctrine');
+            $idService = $request->get('id');
 
-        /** @var Service $service */
-        $service = $doctrine->getRepository('AppBundle:Service')->findOneBy([
-            'id' => $idService,
-        ]);
+            $doctrine = $this->get('doctrine');
 
-        /** @var Cart $cart */
-        $cart = $this->getCart($response);
+            /** @var Service $service */
+            $service = $doctrine->getRepository('AppBundle:Service')->findOneBy([
+                'id' => $idService,
+            ]);
 
-        return $this->render('rendez-vous/service-details.ajax.html.twig', [
-            'cart' => $cart,
-            'service' => $service,
-        ]);
+            /** @var Cart $cart */
+            $cart = $this->getCart($response);
+
+            return $this->render('rendez-vous/service-details.ajax.html.twig', [
+                'cart' => $cart,
+                'service' => $service,
+            ]);
+
+        } else {
+
+            return new Response(null, 405);
+
+        }
     }
 }
