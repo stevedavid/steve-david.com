@@ -184,8 +184,18 @@
                 },
                 defaultView: 'agendaWeek',
                 locale: 'fr',
-                eventDrop: updateRdvSlot(event),
-                eventDragStop: updateRdvSlot(event),
+                eventDrop: function(event) {
+                    $('#selected-day').text(moment(event.start).format('dddd'));
+                    $('#selected-date').text(moment(event.start).format('DD MMMM YYYY'));
+                    $('#selected-time').text(moment(event.start).format('HH:mm'));
+                    $('#rdvInput').val(moment(event.start).format('YYYY-MM-DDTHH:mm:ss'));
+                },
+                eventDragStop:  function(event) {
+                    $('#selected-day').text(moment(event.start).format('dddd'));
+                    $('#selected-date').text(moment(event.start).format('DD MMMM YYYY'));
+                    $('#selected-time').text(moment(event.start).format('HH:mm'));
+                    $('#rdvInput').val(moment(event.start).format('YYYY-MM-DDTHH:mm:ss'));
+                },
                 unselect: function() {
 //                    $('#calendar').fullCalendar('option', 'selectable', false);
                 },
