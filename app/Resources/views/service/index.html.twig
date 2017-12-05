@@ -91,15 +91,15 @@
                         <div class="si-share noborder clearfix">
                             <span>Partagez ce service :</span>
                             <div>
-                                <a href="#" class="social-icon si-borderless si-facebook">
+                                <a href="javascript:window.open('https://www.facebook.com/sharer/sharer.php?u={{ url('service_index', {slugCategory: service.category.slug, slugService: service.slug}) }}', 'Partagez sur Facebook', 'menubar=no, status=no, scrollbars=no, menubar=no, width=750, height=400');" class="social-icon si-borderless si-facebook">
                                     <i class="icon-facebook"></i>
                                     <i class="icon-facebook"></i>
                                 </a>
-                                <a href="#" class="social-icon si-borderless si-twitter">
+                                <a href="javascript:window.open('https://twitter.com/intent/tweet/?url={{ url('service_index', {slugCategory: service.category.slug, slugService: service.slug}) }}', 'Partagez sur Twitter', 'menubar=no, status=no, scrollbars=no, menubar=no, width=750, height=400');" class="social-icon si-borderless si-twitter">
                                     <i class="icon-twitter"></i>
                                     <i class="icon-twitter"></i>
                                 </a>
-                                <a href="#" class="social-icon si-borderless si-pinterest">
+                                <a href="javascript:window.open('https://pinterest.com/pin/create/button/?url={{ url('service_index', {slugCategory: service.category.slug, slugService: service.slug}) }}', 'Partagez sur Twitter', 'menubar=no, status=no, scrollbars=no, menubar=no, width=750, height=400');" class="social-icon si-borderless si-pinterest">
                                     <i class="icon-pinterest"></i>
                                     <i class="icon-pinterest"></i>
                                 </a>
@@ -107,10 +107,16 @@
                                     <i class="icon-linkedin"></i>
                                     <i class="icon-linkedin"></i>
                                 </a>
-                                <a href="#" class="social-icon si-borderless si-email3">
+                                <a href="mailto:destinataire@email.com&subject=J'ai trouvé un service qui peut t'intéresser&body=Inscrivez votre message ici" class="social-icon si-borderless si-email3">
                                     <i class="icon-email3"></i>
                                     <i class="icon-email3"></i>
                                 </a>
+                            </div>
+                            <div class="fb-like"
+                                 data-href="{{ url('service_index', {slugCategory: service.category.slug, slugService: service.slug}) }}"
+                                 data-layout="button_count"
+                                 data-action="like"
+                                 data-show-faces="false">
                             </div>
                         </div><!-- Product Single - Share End -->
 
@@ -169,11 +175,11 @@
                                         {% elseif service.category.slug == 'mediumnite' %}
                                             <tr>
                                                 <td>Compte-rendu en MP3</td>
-                                                <td>Oui</td>
+                                                <td>A demander</td>
                                             </tr>
                                             <tr>
                                                 <td>Compte-rendu écrit</td>
-                                                <td>A demander</td>
+                                                <td>Oui</td>
                                             </tr>
                                         {% endif %}
                                         </tbody>
@@ -323,6 +329,15 @@
 {% endblock %}
 
 {% block javascripts %}
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v2.11&appId=169522666463582';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+
     <script>
         jQuery(function($) {
             $('#prendreRdv').on('submit', function(e) {
