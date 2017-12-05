@@ -219,7 +219,7 @@
 
                     <ul>
                         <li class="{% if controller_name == 'ServiceController' %}current{% endif %} mega-menu"><a href="#"><div>Services</div><span>en thérapie holistique</span></a>
-                            <div class="mega-menu-content style-2 clearfix">
+                            <div class="mega-menu-content style-2 clearfix" id="menu-services">
                                 {{ render(controller('AppBundle:Service:menu')) }}
                             </div>
                         </li>
@@ -452,6 +452,25 @@
              $(v).hover(function() {
                  $(this).attr('src', '{{ asset('images/interview_icon_black.png') }}')
              }, function() {});
+        });
+
+
+        var liServiceSelector = '#menu-services .service-details';
+        window.serviceFeaturedHtml = $('#service-featured').parents('.widget.clearfix').html();
+
+        $(document).on('mouseenter', liServiceSelector, function() {
+            var $this = $(this);
+            var $preview = $('#service-featured');
+            $preview.parent().find('h4').text('Vous regardez :');
+            $preview.find('.entry-image img').attr('src', $this.data('image-src'));
+            $preview.find('.entry-title h3 > a').text($this.data('service-name'));
+
+            var $entryMeta = $preview.find('.entry-meta');
+            $entryMeta.find('li:first-child').html('<i class="icon-book"></i>' + $this.data('category'));
+        });
+
+        $(document).on('mouseleave', liServiceSelector, function() {
+            $('#service-featured').parents('.widget.clearfix').html(window.serviceFeaturedHtml);
         });
 
     });

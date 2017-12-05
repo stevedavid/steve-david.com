@@ -2,7 +2,7 @@
     <li>
         <div class="widget clearfix">
             <h4>En ce moment</h4>
-            <div class="ipost clearfix">
+            <div class="ipost clearfix" id="service-featured">
                 <div class="entry-image">
                     <a href="{{ path('service_index', {slugCategory: featured_service.category.slug, slugService: featured_service.slug}) }}"><img class="image_fade" src="{{ asset('images/services/' ~ featured_service.image) }}" alt="Image"></a>
                 </div>
@@ -22,7 +22,7 @@
         <li class="mega-menu-title"><a href="{{ path('service_category', {slug: category.slug}) }}"><div>{{ category.name }}</div></a>
             <ul>
                 {% for service in category.services %}
-                    <li class=""><a href="{{ path('service_index', {slugCategory: category.slug, slugService: service.slug}) }}"><div>{{ service.name }}</div></a></li>
+                    <li class="service-details" data-category="{{ category.name }}" data-service-name="{{ service.name }}" data-image-src="{{ asset('images/services/' ~ service.image) }}" data-price="{{ service.price }}"><a class="service-link" href="{{ path('service_index', {slugCategory: category.slug, slugService: service.slug}) }}"><div>{{ service.name }}</div></a></li>
                 {% endfor %}
             </ul>
         </li>
