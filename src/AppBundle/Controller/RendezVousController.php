@@ -126,6 +126,10 @@ class RendezVousController extends Controller
         // Mise au panier du service choisi;
         $service = $doctrine->getRepository('AppBundle:Service')->findOneById($idService);
 
+        if ($service->isActive() == false) {
+            throw new AccessDeniedHttpException('Erreur : ce service n\'est pas disponible à la vente');
+        }
+
         $em = $doctrine->getManager();
         $cart->setService($service);
 
