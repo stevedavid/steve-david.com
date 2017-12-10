@@ -66,24 +66,25 @@
 
                         <!-- Product Single - Price
                         ============================================= -->
-                        {% if service.active == true %}
                         <div class="product-price"><ins>{{ service.price }}&euro;</ins> / heure</div><!-- Product Single - Price End -->
 
-                        {% else %}
-                        <span class="label label-default label-lg" style="font-size: 1.5em; background-color: #e2e0e2; color: #444;">Service non disponible actuellement</span>
-                        {% endif %}
                         <div class="clear"></div>
                         <div class="line"></div>
 
                         <!-- Product Single - Quantity & Cart Button
                         ============================================= -->
-                        <form id="prendreRdv" class="cart clearfix nobottommargin" method="get" enctype='multipart/form-data' action="{{ path('rendez_vous_calendrier') }}">
+                        <form style="margin-bottom: 10px;" id="prendreRdv" class="cart clearfix nobottommargin" method="get" enctype='multipart/form-data' action="{{ path('rendez_vous_calendrier') }}">
                             <input type="hidden" name="idService" value="{{ service.id }}"/>
                             <button type="submit" {% if service.active == false %}disabled="disabled" style="background-color: #555555; color: #808080" rel="tooltip" title="Actuellement indisponible"{% endif %}class="add-to-cart button nomargin">Prendre rendez-vous</button>
                             {#<a href="https://5euros.com/service/21658/vous-faire-aller-mieux" class="button button-border button-brown button-xlarge">Prendre rendez-vous</a>#}
                         </form><!-- Product Single - Quantity & Cart Button End -->
 
                         <div class="clear"></div>
+
+                        {% if service.active == false %}
+                            <div class="line"></div>
+                            <span class="label label-default label-lg" style="margin-top: 15px; font-size: 1em; background-color: #e2e0e2; color: #444;">Service non disponible actuellement</span>
+                        {% endif %}
                         <div class="line"></div>
 
                         <!-- Product Single - Short Description
