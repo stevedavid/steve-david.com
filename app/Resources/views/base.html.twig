@@ -6,10 +6,16 @@
 
     <meta charset="UTF-8" />
     <meta name="author" content="Steve David" />
+    {% block meta %}
+        <meta property="og:title" content="Bienvenue / Steve DAVID - thérapeute holistique">
+        <meta property="og:image" content="http://www.steve-david.com/images/slider/intro/4.jpg">
+        <meta property="og:description" content="Vous êtes actuellement sur mon site où je présente mes services en matière de thérapie holistique. Un blog personnel est également consultable en ligne. Si vous êtes intéressé, n'hésitez pas à réserver un rendez-vous.">
+        <meta name="description" content="Je m'appelle Steve DAVID et je suis magnétiseur à Montpellier. Je présente ici mes services de thérapie holistique (magnétisme, coupeur de feu, médiumnité).">
+    {% endblock %}
 
     <!-- Stylesheets
     ============================================= -->
-    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ asset('css/dark.css') }}" type="text/css" />
@@ -39,6 +45,13 @@
             -o-transform: rotate(270deg);
             transform: rotate(270deg);
         }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
     </style>
     {% block stylesheets %}{% endblock %}
 
@@ -51,6 +64,7 @@
     <link rel="manifest" href="{{ asset('images/manifest.json') }}">
     <link rel="mask-icon" href="{{ asset('images/safari-pinned-tab.svg') }}" color="#5bbad5">
     <meta name="theme-color" content="#ffffff">
+
 
     <!-- Document Title
     ============================================= -->
@@ -205,7 +219,7 @@
 
                     <ul>
                         <li class="{% if controller_name == 'ServiceController' %}current{% endif %} mega-menu"><a href="#"><div>Services</div><span>en thérapie holistique</span></a>
-                            <div class="mega-menu-content style-2 clearfix">
+                            <div class="mega-menu-content style-2 clearfix" id="menu-services">
                                 {{ render(controller('AppBundle:Service:menu')) }}
                             </div>
                         </li>
@@ -310,7 +324,7 @@
     </header><!-- #header end -->
 
 
-    <div class="container clearfix" style="margin-top: 15px;">
+    <div class="container clearfix">
         {% for message in app.flashes('success') %}
         <div class="style-msg successmsg ">
             <div class="sb-msg"><i class="icon-thumbs-up"></i><strong>Ok!</strong> {{ message }}</div>
@@ -415,6 +429,15 @@
 ============================================= -->
 <script type="text/javascript" src="{{ asset('js/functions.js') }}"></script>
 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-109889136-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-109889136-1');
+</script>
+
 <script>
     jQuery(function($) {
         $('a[href="#"]').on('click', function(e) {
@@ -430,6 +453,26 @@
                  $(this).attr('src', '{{ asset('images/interview_icon_black.png') }}')
              }, function() {});
         });
+
+
+        var liServiceSelector = '#menu-services .service-details';
+        window.serviceFeaturedHtml = $('#service-featured').parents('.widget.clearfix').html();
+
+        $(document).on('mouseenter', liServiceSelector, function() {
+            var $this = $(this);
+            var $preview = $('#service-featured');
+            $preview.parent().find('h4').text('Vous regardez :');
+            $preview.find('.entry-image img').attr('src', $this.data('image-src'));
+            $preview.find('.entry-title h3 > a').text($this.data('service-name'));
+
+            var $entryMeta = $preview.find('.entry-meta');
+            $entryMeta.find('li:first-child').html('<i class="icon-book"></i>' + $this.data('category'));
+        });
+
+        $(document).on('mouseleave', liServiceSelector, function() {
+            $('#service-featured').parents('.widget.clearfix').html(window.serviceFeaturedHtml);
+        });
+
     });
 </script>
 {% block javascripts %}{% endblock %}

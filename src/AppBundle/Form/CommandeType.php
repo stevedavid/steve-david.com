@@ -59,7 +59,7 @@ class CommandeType extends AbstractType
 
 //        if ($options['isCash']) {
             $builder->add('submit', SubmitType::class, [
-                'label' => 'Je confirme et je paye',
+                'label' => 'Je confirme et je réserve',
                 'attr' => [
                     'class' => 'button button-3d',
                 ],

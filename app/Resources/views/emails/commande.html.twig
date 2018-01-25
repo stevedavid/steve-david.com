@@ -1,2 +1,18 @@
-{{ dump(commande) }}
-{{ dump(cart) }}
+<p>
+    Bonjour,
+    <br/>
+    Une commande vient d'être passée sur steve-david.com.
+</p>
+<p>
+    <strong>{{ commande.name ~ ' ' ~ commande.lastname }}</strong> souhaite prendre rendez-vous le <strong>{{ cart.appointment|date('d/M/Y H:i') }}</strong>.
+    <br/>
+    Vous pouvez envoyer un mail à <strong>{{ commande.email }}</strong> ou téléphoner au <strong>{{ commande.phone }}</strong>.
+    <br/>
+    Le service commandé est <strong>{{ cart.service.name }}</strong> pour un montant de <strong>{{ cart.service.price }}€</strong>.
+</p>
+
+<p>
+    Cordialement,
+    <br/>
+    Un robot
+</p>

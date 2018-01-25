@@ -68,6 +68,13 @@ class Service
     /**
      * @var string
      *
+     * @ORM\Column(name="active", type="boolean")
+     */
+    private $active;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="mode_remote", type="boolean")
      */
     private $modeRemote;
@@ -242,6 +249,18 @@ class Service
     public function getPrice()
     {
         return $this->price;
+    }
+
+    public function isActive()
+    {
+        return $this->active;
+    }
+
+    public function setIsActive($isActive)
+    {
+        $this->active = $isActive;
+
+        return $this;
     }
 
     /**

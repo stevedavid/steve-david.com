@@ -7517,7 +7517,7 @@ body:not(.device-touch) .button.button-full strong {
 	line-height: 64px;
 }
 
-.feature-box h3 {
+.feature-box h2 {
 	font-size: 16px;
 	font-weight: 700;
 	text-transform: uppercase;
@@ -7833,14 +7833,15 @@ body:not(.device-touch) .button.button-full strong {
 /* Feature Box - Subtitle
 -----------------------------------------------------------------*/
 
-.feature-box h3 + .fbox-icon { margin-top: 20px !important; }
+.feature-box h2 + .fbox-icon { margin-top: 20px !important; }
 
-.feature-box h3 span.subtitle {
+.feature-box h2 + h3.subtitle {
 	display: block;
 	margin-top: 5px;
 	color: #444;
 	font-weight: 300;
 	text-transform: none;
+	font-size: 16px !important;
 }
 
 .feature-box.fbox-center:not(.fbox-bg) h3:after {
@@ -13619,4 +13620,5 @@ body:not(.no-transition) #wrapper,
 	margin:0!important;
 	padding:0!important
 }
+
 

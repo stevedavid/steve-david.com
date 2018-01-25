@@ -62,7 +62,7 @@
                 <h3>{{ category.name }}</h3>
                 <div id="shop" class="shop product-3 clearfix">
                     {% for service in category.services %}
-                        {% if service_a_distance == 1 and service.remoteMode == false %}
+                        {% if (service_a_distance == 1 and service.remoteMode == false) or (service.active == false)  %}
                             &nbsp;
                         {% else %}
                             <div class="product clearfix">
