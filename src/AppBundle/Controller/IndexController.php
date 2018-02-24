@@ -111,14 +111,18 @@ class IndexController extends Controller
         $doctrine = $this->get('doctrine');
 
         $themes = $doctrine->getRepository('AppBundle:Theme')->findAll();
-        $posts = $doctrine->getRepository('AppBundle:Post')->findBy([], ['date' => 'DESC'], 3);
 
         $nbServices = $doctrine->getRepository('AppBundle:Service')->countAll();
         $nbBlogPosts = $doctrine->getRepository('AppBundle:Post')->countAll();
 
+        $services = $doctrine->getRepository('AppBundle:Service')->findRandom(3);
+
+        array_splice($services, 3, count($services));
+
+
         return $this->render('index/footer.html.twig', [
             'themes' => $themes,
-            'posts' => $posts,
+            'services' => $services,
             'nb_services' => $nbServices,
             'nb_blog_posts' => $nbBlogPosts,
         ]);

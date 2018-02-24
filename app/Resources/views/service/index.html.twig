@@ -10,10 +10,12 @@
     <meta property="article:author" content="https://www.facebook.com/steve.david.therapeute">
 {% endblock %}
 
-{% block css %}
+{% block stylesheets %}
     <style>
-        span.label.label-default {
-            font-size: 3em !important;
+
+        .sidebar .widget_links a {
+            padding: 0;
+            background: none;
         }
     </style>
 {% endblock %}
@@ -233,6 +235,7 @@
                                     <div class="nobottommargin">
                                         <div class="feature-box media-box">
                                             <a href="{{ path('service_index', {slugCategory: random_service.category.slug, slugService: random_service.slug}) }}">
+                                                <h5 class="center">{{ random_service.category.name }}</h5>
                                                 <div class="fbox-media">
                                                     <img src="{{ asset('images/services/' ~ random_service.image) }}" alt="Why choose Us?">
                                                     <div class="overlay"><div class="overlay-wrap"><i class="icon-zoom-in2"></i></div></div>
@@ -265,7 +268,7 @@
                             {% if service.category.name != category.name %}
                                 <li><a href="{{ path('service_category', {slug: category.slug}) }}">{{ category.name }}</a></li>
                             {% else %}
-                                <li>{{ category.name }}</li>
+                                <li><span class="arrow">{{ category.name }}</span></li>
                             {% endif %}
                         {% endfor %}
                     </ul>
@@ -353,6 +356,7 @@
 
     <script>
         jQuery(function($) {
+
             $('#prendreRdv').on('submit', function(e) {
                 e.preventDefault();
 
