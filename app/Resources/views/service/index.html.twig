@@ -259,6 +259,18 @@
 
         <div class="sidebar nobottommargin col_last clearfix">
             <div class="sidebar-widgets-wrap">
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <div class="widget subscribe-widget clearfix">
+                    <div class="dark" style="padding: 25px; background-color: #383838; border-radius: 2px;">
+                        <div class="fancy-title title-border">
+                            <h4>Votre suivi</h4>
+                        </div>
+                        <p style="font-size: 15px; line-height: 1.5; color: #999;">Subscribe to Our Newsletter to get Important News, Amazing Offers &amp; Inside Scoops:</p>
+                        <div class="widget-subscribe-form-result"></div>
+                        <a href="#" class="button button-3d btn-block button-small nomargin text-center" style="margin-top: 15px !important;" type="submit">Mes rendez-vous</a>
+                    </div>
+                </div>
+                {% endif %}
 
                 <div class="widget widget_links clearfix">
 

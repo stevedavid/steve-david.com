@@ -33,4 +33,18 @@ class ServiceRepository extends \Doctrine\ORM\EntityRepository
 
         return $results;
     }
+
+    public function findAllByUser($user)
+    {
+        $results = $this->_em->createQueryBuilder()
+            ->add('select', 'u')
+            ->add('from', 'User u')
+            ->add('where', 'u.id = ?1')
+            ->add('orderBy', 'u.name ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $results;
+    }
 }

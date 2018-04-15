@@ -26,6 +26,10 @@ class ServiceController extends Controller
             throw new NotFoundHttpException('Service non trouvé');
         }
 
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+//            $appointments = $doctrine->getRepository('AppBundle:Service')->findAllByUser($this->getUser());
+        }
+
         return $this->render('service/index.html.twig', [
             'service' => $service,
             'categories' => $categories,

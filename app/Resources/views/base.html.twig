@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{ asset('css/animate.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/fontawesome-all.min.css') }}" type="text/css" />
 
     <style>
         .sticky-side-element {
@@ -248,61 +249,64 @@
 
                             </div>
                         </li>
-                        {#
-                        <li class="mega-menu"><a href="#"><div><i class="icon-lock"></i> Espace personnel</div><span>sécurisé</span></a>
+                        <li class="mega-menu">
+                            <a href="#">
+                                <div>
+                                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                        <i class="icon-unlock"></i>
+                                    {% else %}
+                                        <i class="icon-lock"></i>
+                                    {% endif %}
+                                    Espace personnel
+                                </div>
+                                <span>sécurisé</span>
+                            </a>
                             <div class="mega-menu-content style-2 clearfix">
 
                                 <ul class="mega-menu-column col-md-4">
-                                    <li class="mega-menu-title"><a href="#"><div>Vos documents</div></a>
+                                    <li class="mega-menu-title"><a href="{{ path('espace_personnel_index') }}"><div>Vos documents</div></a>
                                         <ul>
-                                            <li><a href="#"><div>Factures</div></a></li>
-                                            <li><a href="#"><div>Documents</div></a></li>
+                                            <li><a href="{{ path('espace_personnel_index') }}"><div>Factures</div></a></li>
+                                            <li><a href="{{ path('espace_personnel_index') }}"><div>Documents</div></a></li>
                                         </ul>
                                     </li>
                                 </ul>
                                 <ul class="mega-menu-column col-md-4">
-                                    <li class="mega-menu-title"><a href="#"><div>Vos rendez-vous</div></a>
+                                    <li class="mega-menu-title"><a href="{{ path('espace_personnel_rendez-vous') }}"><div>Vos rendez-vous</div></a>
                                         <ul>
-                                            <li><a href="#"><div>Cette semaine</div></a></li>
-                                            <li><a href="#"><div>Ce mois-ci</div></a></li>
-                                            <li><a href="#"><div>Le mois dernier</div></a></li>
-                                            <li><a href="#"><div>Cette année</div></a></li>
-                                            <li><a href="#"><div>L'année dernière</div></a></li>
-                                            <li><a href="#"><div>Tous</div></a></li>
+                                            <li><a href="{{ path('espace_personnel_rendez-vous') }}"><div>Cette semaine</div></a></li>
+                                            <li><a href="{{ path('espace_personnel_rendez-vous') }}"><div>Ce mois-ci</div></a></li>
+                                            <li><a href="{{ path('espace_personnel_rendez-vous') }}"><div>Le mois dernier</div></a></li>
+                                            <li><a href="{{ path('espace_personnel_rendez-vous') }}"><div>Cette année</div></a></li>
+                                            <li><a href="{{ path('espace_personnel_rendez-vous') }}"><div>L'année dernière</div></a></li>
+                                            <li><a href="{{ path('espace_personnel_rendez-vous') }}"><div>Tous</div></a></li>
                                         </ul>
                                     </li>
                                 </ul>
                                 <ul class="mega-menu-column col-md-4">
                                     <li>
-                                        <div class="widget clearfix">
+                                        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                            <div class="widget clearfix text-center">
 
-                                            <h4>Connectez-vous</h4>
+                                                <h4>Bienvenue</h4>
 
-                                            <form id="login-form" name="login-form" class="nobottommargin" action="#" method="post">
+                                                <p>Vous êtes actuellement connecté en tant que <strong>{{ app.user.username }}</strong></p>
 
-                                                <div class="col_full">
-                                                    <label for="login-form-username">Votre adresse e-mail</label>
-                                                    <input type="text" id="login-form-username" name="login-form-username" value="" class="form-control" />
-                                                </div>
+                                                <p>Utilisez le bouton ci-dessous pour vous déconnecter de votre session.</p>
 
-                                                <div class="col_full">
-                                                    <label for="login-form-password">Votre mot de passe :</label>
-                                                    <input type="password" id="login-form-password" name="login-form-password" value="" class="form-control" />
-                                                </div>
+                                                <div class="bottommargin-sm"></div>
 
-                                                <div class="col_full nobottommargin">
-                                                    <button class="button button-3d button-black nomargin" id="login-form-submit" name="login-form-submit" value="login">Connexion</button>
-                                                    <a href="#" class="fright">Mot de passe oublié ?</a>
-                                                </div>
-
-                                            </form>
-
-                                        </div>
+                                                <p class="text-center">
+                                                    <a href="{{ path('logout') }}" style="width: 100%;"><i class="i-circled icon-remove" style="display: block; margin: auto;"></i></a>
+                                                </p>
+                                            </div>
+                                        {% else %}
+                                            {{ render(controller('FOSUserBundle:Security:login')) }}
+                                        {% endif %}
                                     </li>
                                 </ul>
                             </div>
                         </li>
-                        #}
                     </ul>
                     {{ render(controller('AppBundle:RendezVous:cart')) }}
                     {#
@@ -352,9 +356,69 @@
     </div>
 
     {% block page_title %}
+
     {% endblock %}
 
     {% block page_menu %}
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <div id="page-menu">
+
+                <div id="page-menu-wrap">
+
+                    <div class="container clearfix">
+
+                        <div class="menu-title">Bienvenue <span>{{ app.user.username }}</span></div>
+
+                        <nav>
+                            <ul>
+                                <li class="{% if action_name == 'indexAction' %}current{% endif %}"><a href="{{ path('espace_personnel_index') }}"><div>Accueil</div></a></li>
+                                <li class="{% if action_name == 'profilAction' %}current{% endif %}">
+                                    <a href="{{ path('espace_personnel_profil') }}">
+                                        <div>
+                                            <i class="fa fa-user"></i>
+                                            Votre profil
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="{% if action_name == 'rendezVousAction' %}current{% endif %}">
+                                    <a href="{{ path('espace_personnel_rendez-vous') }}">
+                                        <div>
+                                            <i class="fa fa-calendar fa-1x"></i>
+                                            Vos rendez-vous
+                                        </div>
+                                    </a>
+                                    <ul id="rdv-menu">
+                                        <li><a href="{{ path('espace_personnel_rendez-vous') ~ '#this-week' }}"><div>Cette semaine</div></a></li>
+                                        <li><a href="{{ path('espace_personnel_rendez-vous') ~ '#last-week' }}"><div>La semaine dernière</div></a></li>
+                                        <li><a href="{{ path('espace_personnel_rendez-vous') ~ '#this-month' }}"><div>Ce mois-ci</div></a></li>
+                                        <li><a href="{{ path('espace_personnel_rendez-vous') ~ '#last-month' }}"><div>Le mois dernier</div></a></li>
+                                        <li><a href="{{ path('espace_personnel_rendez-vous') ~ '#this-year' }}"><div>Cette année</div></a></li>
+                                        <li><a href="{{ path('espace_personnel_rendez-vous') ~ '#last-year' }}"><div>L'année dernière</div></a></li>
+                                        <li><a href="{{ path('espace_personnel_rendez-vous') ~ '#all-rdv' }}"><div>Tous</div></a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">
+
+                                        <div>
+                                            <i class="fa fa-file"></i>
+                                            Vos documents
+                                        </div>
+
+                                    </a>
+                                    <ul>
+                                        <li><a href="#"><div>Factures</div></a></li>
+                                        <li><a href="#"><div>Autres documents</div></a></li>
+                                    </ul>
+                                </li>
+                                </li>
+                                <li><a href="{{ path('logout') }}"><div>Déconnexion</div></a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     {% endblock %}
 
     {% block slider %}

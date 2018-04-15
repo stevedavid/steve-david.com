@@ -48,6 +48,12 @@ class Cart
     private $service;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="carts")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -103,6 +109,25 @@ class Cart
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param $user
+     * @return $this
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
     /**
@@ -255,6 +280,11 @@ class Cart
     public function getPaid()
     {
         return $this->paid;
+    }
+    
+    public function getDateRange()
+    {
+        $date = $this->getAppointment();
     }
 }
 

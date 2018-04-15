@@ -1,0 +1,79 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}
+    Votre espace personnel
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        #page-menu-wrap nav li i.fa {
+            display: inline-block;
+            margin-right: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block page_title %}
+    {% include 'index/page_title.html.twig' with {
+    page_title: 'Espace personnel',
+    page_subtitle: 'Espace centralisant tout votre suivi.',
+    steps: [{
+    name: 'Espace personnel'
+    }]
+    } %}
+{% endblock %}
+
+
+{% block page_menu %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="container clearfix">
+
+        <div class="col_full">
+
+            <div class="heading-block center nobottomborder">
+                <h2>Bienvenue sur votre espace personnel</h2>
+                <span>Retrouvez ici toutes les informations relatives à votre suivi</span>
+            </div>
+
+        </div>
+
+        <div class="col_half center" data-animate="bounceIn">
+            <i class="i-plain i-xlarge divcenter nobottommargin icon-briefcase"></i>
+            <div class="counter counter-large" style="color: #3498db;"><span data-from="0" data-to="{{ nb_consultations }}" data-refresh-interval="50" data-speed="2000"></span></div>
+            <h5>consultations à ce jour</h5>
+        </div>
+
+        <div class="col_half col_last center" data-animate="bounceIn" data-delay="200">
+            <i class="i-plain i-xlarge divcenter nobottommargin icon-calendar"></i>
+            <div class="counter counter-large" style="color: #e74c3c;"><span data-from="0" data-to="{{ days_number }}" data-refresh-interval="50" data-speed="2500"></span></div>
+            <h5>jours d'inscription</h5>
+        </div>
+
+        <div class="clear"></div>
+
+
+    </div>
+    {% if next_appointment is defined and next_appointment is not empty %}
+        {% set days = date(next_appointment.appointment).diff(date()).days %}
+        {% dump(next_appointment) %}
+        <div class="section parallax dark bottommargin-lg skrollable skrollable-between" style="background-image: url('{{ asset('images/diplome.jpg') }}'); background-size: cover; padding: 0px 0px; background-position: 0px -466.5px;" data-bottom-top="background-position:0px 0px;" data-top-bottom="background-position:0px -1866px;">
+            <div style="background-color: rgba(0, 0, 0, 0.3); width: 100%; padding: 100px;">
+
+                <div class="container clearfix" style="background-color: rgba(0, 0, 0, 0.2); padding: 20px;">
+
+                    <div class="col_full nobottommargin center bounceIn animated" data-animate="bounceIn">
+                        <i class="i-plain i-large divcenter nobottommargin fa fa-calendar-alt"></i>
+                        <div class="counter counter-lined">{{ days }}</div>
+                        <h5>jours avant votre<br/>prochain rendez-vous</h5>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

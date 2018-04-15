@@ -1,0 +1,288 @@
+{% extends ':espace-personnel:index.html.twig' %}
+
+{% block title %}
+    Vos rendez-vous
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {#<link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" />#}
+    <link rel="stylesheet" href="{{ asset('css/custom_css.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/fullcalendar.min.css') }}">
+    <style>
+        .fc-agenda-slots td div { height: 100px !important; }
+        .fc-widget-header > table, .fc-view table { margin-bottom: 0; }
+        button[disabled], button[disabled]:hover { background-color: #c5c5c5; cursor: not-allowed }
+
+        .bootstrap-datetimepicker-widget table td.disabled, .bootstrap-datetimepicker-widget table td.disabled:hover,
+        .bootstrap-datetimepicker-widget table td span.disabled, .bootstrap-datetimepicker-widget table td span.disabled:hover {
+            color: #b7b7b7;
+        }
+
+        .bootstrap-datetimepicker-widget table td.day,
+        .bootstrap-datetimepicker-widget table span.month {
+            font-weight: 800;
+        }
+
+        .bootstrap-datetimepicker-widget table td.old:not(.disabled), .bootstrap-datetimepicker-widget table td.new:not(.disabled) {
+            color: #717171;
+            font-weight: 400;
+        }
+
+        .fc-calendar-container {
+            margin-bottom: 30px;
+        }
+
+        #choose-date {
+            margin-bottom: 30px;
+        }
+
+        em {
+            font-style: normal;
+            border-bottom: 1px dotted #a5a5a5;
+        }
+
+        th.picker-switch[title="Select Year"] {
+            pointer-events: none;
+        }
+
+        .fc-event {
+            width: 103%;
+            margin-left: -3px;
+        }
+    </style>
+{% endblock %}
+
+{% block page_title %}
+    {% include 'index/page_title.html.twig' with {
+    page_title: 'Vos rendez-vous',
+    page_subtitle: 'Retrouvez ici tous vos rendez-vous',
+    steps: [{
+    name: 'Espace personnel'
+    }, {
+    name: 'Vos rendez-vous'
+    }]
+    } %}
+{% endblock %}
+
+{% block content %}
+    <div class="container clearfix">
+        <div class="events-calendar nobottommargin">
+            <div id="calendar" class="fc-calendar-container "></div>
+        </div>
+
+        <div class=" nobottommargin clearfix">
+
+            <ul id="portfolio-filter" class="portfolio-filter clearfix">
+
+                <li class="activeFilter "><a href="#" data-filter=".this-week">Cette semaine</a></li>
+                <li class=""><a href="#" data-filter=".last-week">La semaine dernière</a></li>
+                <li class=""><a href="#" data-filter=".this-month">Ce mois-ci</a></li>
+                <li><a href="#" data-filter=".last-month">Le mois dernier</a></li>
+                <li><a href="#" data-filter=".this-year">Cette année</a></li>
+                <li><a href="#" data-filter=".last-year">L'année dernière</a></li>
+                <li class=""><a href="#" data-filter=".all-rdv">Tous</a></li>
+
+            </ul>
+
+            <div class="clear"></div>
+
+            <div id="rdvs" class="faqs">
+
+                <div class="toggle rdv this-week" style="">
+                    <h2>
+                        Cette semaine
+                        <small>du <u>{{ timestamps.this_week[0]|localizeddate('full', 'none', 'fr', null, 'EEEE d MMMM Y') }}</u> au <u>{{ timestamps.this_week[1]|localizeddate('full', 'none', 'fr', null, 'EEEE d MMMM Y') }}</u></small>
+                    </h2>
+                </div>
+                <div class=" rdv last-week" style="">
+                    <h2>
+                        La semaine dernière
+                        <small>du <u>{{ timestamps.last_week[0]|localizeddate('full', 'none', 'fr', null, 'EEEE d MMMM Y') }}</u> au <u>{{ timestamps.last_week[1]|localizeddate('full', 'none', 'fr', null, 'EEEE d MMMM Y') }}</u></small>
+                    </h2>
+
+                </div>
+                <div class=" rdv this-month" style="">
+                    <h2>
+                        Ce mois-ci
+                        <small>du <u>{{ timestamps.this_month[0]|localizeddate('full', 'none', 'fr', null, 'EEEE d MMMM Y') }}</u> au <u>{{ timestamps.this_month[1]|localizeddate('full', 'none', 'fr', null, 'EEEE d MMMM Y') }}</u></small>
+                    </h2>
+
+                </div>
+                <div class=" rdv last-month" style="">
+                    <h2>
+                        Le mois dernier
+                        <small>du <u>{{ timestamps.last_month[0]|localizeddate('full', 'none', 'fr', null, 'EEEE d MMMM Y') }}</u> au <u>{{ timestamps.last_month[1]|localizeddate('full', 'none', 'fr', null, 'EEEE d MMMM Y') }}</u></small>
+                    </h2>
+
+                </div>
+                <div class=" rdv this-year" style="">
+                    <h2>
+                        Cette année
+                        <small>du <u>{{ timestamps.this_year[0]|localizeddate('full', 'none', 'fr', null, 'EEEE d MMMM Y') }}</u> au <u>{{ timestamps.this_year[1]|localizeddate('full', 'none', 'fr', null, 'EEEE d MMMM Y') }}</u></small>
+                    </h2>
+
+                </div>
+                <div class=" rdv last-year" style="">
+                    <h2>
+                        L'année dernière
+                        <small>du <u>{{ timestamps.last_year[0]|localizeddate('full', 'none', 'fr', null, 'EEEE d MMMM Y') }}</u> au <u>{{ timestamps.last_year[1]|localizeddate('full', 'none', 'fr', null, 'EEEE d MMMM Y') }}</u></small>
+                    </h2>
+
+                </div>
+                <div class=" rdv all-rdv" style="">
+                    <h2>Tous vos rendez-vous</h2>
+
+                </div>
+
+                {% dump(sorted_appointments) %}
+
+                {% for category, appointments in sorted_appointments %}
+                    {% for appointment in appointments %}
+                        <div class="toggle rdv {{ category|replace({'_': '-'}) }} all-rdv" style="">
+                            <div class="togglet">
+                                <div style="float: left; display: inline-block; margin-right: 10px;">
+                                    {% if appointment.remote == true %}
+                                        <img src="{{ asset('images/skype-icon-black.png') }}" style="width: 48px;" rel="tooltip" title="Consultation à distance">
+                                    {% else %}
+                                        <img src="{{ asset('images/interview-icon-black.png') }}" style="width: 48px;" rel="tooltip" title="En face à face">
+                                    {% endif %}
+                                </div>
+                                <div style="display: inline-block;">
+                                    {{ appointment.service.name }}
+                                    <br/> <small>le {{ appointment.appointment|localizeddate('full', 'none', 'fr', null, 'EEEE d MMMM Y à H:mm') }}</small>
+                                </div>
+                            </div>
+                            <div class="togglec" style="display: none;">
+                                Nous nous sommes rencontrés pour une séance de <strong>{{ appointment.service.category.name|lower }}</strong>
+                                d'une durée d'<strong>une heure</strong>.
+                                <br/>
+                                Vous pouvez <a href="{{ path('service_index', {slugCategory: appointment.service.category.slug, slugService: appointment.service.slug}) }}">consulter la fiche</a>, <a href="#">visualiser les documents</a> ou <a href="#">télécharger la facture</a> inhérents à votre consultation.
+                            </div>
+                        </div>
+                    {% else %}
+                        <blockquote class="rdv {{ category|replace({'_': '-'}) }}">
+                            <p>Aucun rendez-vous pour cette catégorie</p>
+                        </blockquote>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/plugins/moment.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/moment-with-locales.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/moment-recur.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/jquery.fullcalendar.locales.min.js') }}"></script>
+
+    <script>
+        jQuery(function($) {
+
+            $('#calendar').fullCalendar({
+                allDaySlot: false,
+                events: [
+                    {% for appointment in appointments %}
+                    {
+                        draggable: false,
+                        title: '{{ appointment.service.name }}',
+                        startEditable: false,
+                        start: '{{ appointment.appointment|date('m/d/Y H:i:s') }}',
+                        end: '{{ appointment.appointment|date_modify('+1 hour')|date('m/d/Y H:i:s') }}',
+                        color: '#ecd5bb',
+                        textColor: '#444',
+                    },
+                    {% endfor %}
+                ],
+                minTime: '07:00:00',
+                maxTime: '21:00:00',
+                height: 500,
+                disableDragging: true,
+                editable: false,
+                selectHelper: true,
+                selectOverlap: true,
+                eventStartEditable: true,
+                eventDurationEditable: false,
+                selectable: false,
+                weekNumbers: true,
+                aspectRatio: 0.95,
+                slotDuration: '01:00:00',
+                eventColor: '#8b786a',
+                defaultTimedEventDuration: '01:00:00',
+                header: {
+                    left: 'prev,today,next',
+                    center: 'title',
+                    right: '',
+                },
+                defaultView: 'agendaWeek',
+                locale: 'fr',
+            });
+
+
+
+        });
+
+
+        jQuery(document).ready(function($){
+            var $faqItems = $('#rdvs .rdv');
+            if( window.location.hash != '' ) {
+                $('html, body').animate({
+                    'scrollTop': $('#portfolio-filter').offset().top - 143 + 'px',
+                }, 2500);
+                var getFaqFilterHash = window.location.hash;
+                var hashFaqFilter = getFaqFilterHash.split('#');
+                if( $faqItems.hasClass( hashFaqFilter[1] ) ) {
+                    $('#portfolio-filter li').removeClass('activeFilter');
+                    $( '[data-filter=".'+ hashFaqFilter[1] +'"]' ).parent('li').addClass('activeFilter');
+                    var hashFaqSelector = '.' + hashFaqFilter[1];
+                    $faqItems.css('display', 'none');
+                    if( hashFaqSelector != 'all' ) {
+                        $( hashFaqSelector ).fadeIn(500);
+                    } else {
+                        $faqItems.fadeIn(500);
+                    }
+                }
+            } else {
+                $faqItems.each(function() {
+                    if(!$(this).hasClass('this-week'))  {
+                        $(this).hide();
+                    }
+                });
+
+            }
+
+            $('#portfolio-filter a').click(function(){
+                $('#portfolio-filter li').removeClass('activeFilter');
+                $(this).parent('li').addClass('activeFilter');
+                var faqSelector = $(this).attr('data-filter');
+                $faqItems.css('display', 'none');
+                if( faqSelector != 'all' ) {
+                    $( faqSelector ).fadeIn(500);
+                } else {
+                    $faqItems.fadeIn(500);
+                }
+                return false;
+            });
+
+
+
+            $('[rel=tooltip]').tooltip({
+                placement: 'right'
+            });
+
+            $('#page-menu-wrap').find('ul#rdv-menu').find('a').each(function() {
+                $(this).on('click', function() {
+                    window.location.href = $(this).attr('href');
+                    window.location.reload(true);
+                });
+            });
+        });
+
+    </script>
+{% endblock %}
