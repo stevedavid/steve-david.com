@@ -19,7 +19,7 @@ class ServiceController extends Controller
         $serviceRepository = $doctrine->getRepository('AppBundle:Service');
 
         $service = $serviceRepository->findOneBySlug($slugService);
-        $randomServices = $serviceRepository->findRandom(4);
+        $randomServices = $serviceRepository->findRandom(0);
         $categories = $doctrine->getRepository('AppBundle:Category')->findAll();
 
         if (empty($service) || $service->getCategory()->getSlug() != $slugCategory) {

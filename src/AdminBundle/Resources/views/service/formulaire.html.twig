@@ -1,0 +1,250 @@
+{% extends 'AdminBundle::base.html.twig' %}
+
+{% block css %}
+    <style>
+        #service_image {
+            display: none;
+        }
+
+        #form-submit {
+            text-align: center;
+        }
+
+        #form-submit > div {
+            margin: 10px;
+            display: inline-block;
+        }
+
+        #image-preview {
+            display: block;
+        }
+    </style>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'AdminBundle::breadcrumbs.html.twig' with {section: 'Services', page: 'Modifier un service'} %}
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-lg-6 m-form">
+            <!--begin::Portlet-->
+            <div class="m-portlet">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <span class="m-portlet__head-icon m--hide">
+                            <i class="la la-gear"></i>
+                            </span>
+                            <h3 class="m-portlet__head-text">
+                                Informations principales
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <!--begin::Form-->
+                <div class="m-portlet__body">
+                    <div class="m-form__section m-form__section--first">
+                        <div class="m-form__heading">
+                            <h3 class="m-form__heading-title">1. Identité du service</h3>
+                        </div>
+                        <div class="form-group m-form__group">
+                            {{ form_label(form.name) }}
+                            {{ form_widget(form.name) }}
+                            <span class="m-form__help">Quel est le nom du service ?</span>
+                        </div>
+                        <div class="form-group m-form__group">
+                            {{ form_label(form.subtitle) }}
+                            {{ form_widget(form.subtitle) }}
+                            <span class="m-form__help">Comment résumer ce service en une phrase ?</span>
+                        </div>
+
+                    </div>
+
+                    <div class="m-form__seperator m-form__seperator--dashed"></div>
+
+                    <div class="m-form__section">
+                        <div class="m-form__heading">
+                            <h3 class="m-form__heading-title">2. Contexte du service</h3>
+                        </div>
+                        <div class="form-group m-form__group">
+                            {{ form_label(form.category) }}
+                            {{ form_widget(form.category) }}
+                            <span class="m-form__help">Dans quelle catégorie entre ce service ?</span>
+                        </div>
+                        <div class="form-group m-form__group">
+                            {{ form_label(form.slug) }}
+                            {{ form_widget(form.slug) }}
+                            <span class="m-form__help">Quelle sera la forme de l'URL de ce service ?</span>
+                        </div>
+                    </div>
+
+                    <div class="m-form__seperator m-form__seperator--dashed"></div>
+
+                    <div class="m-form__section m-form__section--last">
+                        <div class="m-form__heading">
+                            <h3 class="m-form__heading-title">3. Informations additionnelles</h3>
+                        </div>
+                        <div class="form-group m-form__group">
+                            {{ form_label(form.price) }}
+                            <div class="input-group m-input-group">
+                                {{ form_widget(form.price) }}
+                                <span class="input-group-addon" id="basic-addon1"><i class="fa fa-euro"></i></i></span>
+                            </div>
+                            <span class="m-form__help">Quel prix vendez-vous ce service ?</span>
+                        </div>
+                        <div class="form-group m-form__group">
+                            {{ form_label(form.remoteMode) }}
+                            <div class="col-3">
+                                <span class="m-switch m-switch--icon">
+                                    <label>
+                                    {{ form_widget(form.remoteMode) }}
+                                    <span></span>
+                                    </label>
+                                </span>
+                            </div>
+                            <span class="m-form__help">Est-ce que ce service peut être effectué à distance ?</span>
+                        </div>
+                        <div class="form-group m-form__group">
+                            {{ form_label(form.isFeatured) }}
+                            <div class="col-3">
+                                <span class="m-switch m-switch--icon">
+                                    <label>
+                                    {{ form_widget(form.isFeatured) }}
+                                    <span></span>
+                                    </label>
+                                </span>
+                            </div>
+                            <span class="m-form__help">Souhaitez-vous mettre en avant ce service dans le menu supérieur du site ?</span>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Form-->
+            </div>
+            <!--end::Portlet-->
+        </div>
+        <div class="col-lg-6">
+            <!--begin::Portlet-->
+            <div class="m-portlet m-form">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+						<span class="m-portlet__head-icon m--hide">
+						<i class="la la-gear"></i>
+						</span>
+                            <h3 class="m-portlet__head-text">
+                                Description du service
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-portlet__body">
+                    <div class="m-form__section m-form__section--first">
+                        <div class="m-form__heading">
+                            <h3 class="m-form__heading-title">1. Introduction</h3>
+                        </div>
+                        <div class="form-group m-form__group">
+                            {{ form_label(form.shortDescription) }}
+                            {{ form_widget(form.shortDescription) }}
+                            <span class="m-form__help">Entrez une brève description du service.</span>
+                        </div>
+                    </div>
+
+                    <div class="m-form__seperator m-form__seperator--dashed"></div>
+
+                    <div class="m-form__section">
+                        <div class="m-form__heading">
+                            <h3 class="m-form__heading-title">2. Description</h3>
+                        </div>
+                        <div class="form-group m-form__group">
+                            {{ form_label(form.longDescription) }}
+                            {{ form_widget(form.longDescription) }}
+                            <span class="m-form__help">Détaillez le service.</span>
+                        </div>
+                    </div>
+                    <div class="m-form__seperator m-form__seperator--dashed"></div>
+
+                    <div class="m-form__section">
+                        <div class="m-form__heading">
+                            <h3 class="m-form__heading-title">3. Image</h3>
+                        </div>
+                        <div class="form-group m-form__group">
+                            {{ form_widget(form.image) }}
+                            <div class="m-dropzone" action="{{ path('admin_service_upload') }}" id="upload-service-image">
+                                <div class="m-dropzone__msg dz-message needsclick">
+                                    <h3 class="m-dropzone__msg-title">
+                                        Déposez les fichiers ici
+                                    </h3>
+                                    <span class="m-dropzone__msg-desc">
+                                        ou cliquez pour en sélectionner un
+                                    </span>
+                                </div>
+                            </div>
+                            <span class="m-form__help">Choisissez une image sur votre ordinateur. <br/> Voici l'image actuellement en ligne :</span>
+                            <img src="{{ asset('images/blank.svg') }}" id="image-preview"/>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Form-->
+            </div>
+            <!--end::Portlet-->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="m-portlet">
+                <div class="m-portlet__body" id="form-submit">
+                    {{ form_row(form.submit) }}
+                    {{ form_row(form.cancel) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        //== Class definition
+
+        var BootstrapMarkdown = function () {
+            //== Private functions
+            var demos = function () {
+            }
+
+            return {
+                // public functions
+                init: function() {
+                    demos();
+                }
+            };
+        }();
+
+        //== Initialization
+        jQuery(document).ready(function() {
+            BootstrapMarkdown.init({
+            });
+
+            var myDropzone = new Dropzone("#upload-service-image");
+            myDropzone.on("addedfile", function(file) {
+                $('#service_image').val(file.name);
+
+            });
+            myDropzone.on("success", function(file) {
+                $('#image-preview').attr({
+                    src: '/images/services/' + file.name,
+                    width: 100,
+                });
+
+            });
+
+            $('#image-preview').attr({
+                src: '/images/services/' + $('#service_image').val(),
+                width: 100,
+            });
+        });
+
+
+    </script>
+{% endblock %}

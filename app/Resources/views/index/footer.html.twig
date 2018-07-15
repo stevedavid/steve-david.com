@@ -45,24 +45,22 @@
             <div class="col_one_third col_last">
 
                 <div class="widget clearfix">
-                    {#
-                    <h4>Derniers billets</h4>
+                    <h4>3 services <br/> « au hasard »</h4>
 
                     <div id="post-list-footer">
-                        {% for post in posts %}
+                        {% for service in services %}
                             <div class="spost clearfix">
                                 <div class="entry-c">
                                     <div class="entry-title">
-                                        <h4><a href="{{ path('blog_post', {date: post.date|date('Y-m-d'), slug: post.slug}) }}">{{ post.title }}</a></h4>
+                                        <h4><a href="{{ path('service_index', {slugCategory: service.category.slug, slugService: service.slug}) }}">{{ service.name }}</a></h4>
                                     </div>
                                     <ul class="entry-meta">
-                                        <li>{{ post.date|date('d/m/Y') }}</li>
+                                        <li>{{ service.category.name }}</li>
                                     </ul>
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
-                    #}
                 </div>
 
             </div>

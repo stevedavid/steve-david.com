@@ -1,0 +1,92 @@
+{% extends 'AdminBundle::base.html.twig' %}
+
+{% block breadcrumbs %}
+    {% include 'AdminBundle::breadcrumbs.html.twig' with {section: 'Services', page: 'Voir les services'} %}
+{% endblock %}
+
+{% block body %}
+    <div class="m-content">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="m-portlet">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">
+                                    Liste des services
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-portlet__body">
+                        <!--begin::Section-->
+                        <div class="m-section">
+                            <div class="m-section__content">
+                                <table class="table table-bordered m-table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nom</th>
+                                        <th>Prix</th>
+                                        <th>Catégorie</th>
+                                        <th>Sous-titre</th>
+                                        <th>Slug</th>
+                                        <th>A distance</th>
+                                        <th>Description courte</th>
+                                        <th>Description</th>
+                                        <th>Mis en avant</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for service in services %}
+                                        <tr>
+                                            <th scope="row">{{ service.id }}</th>
+                                            <td>{{ service.name }}</td>
+                                            <td>{{ service.price ~ '€' }}</td>
+                                            <td>{{ service.category.name }}</td>
+                                            <td>{{ service.subtitle }}</td>
+                                            <td>{{ '/' ~ service.slug }}</td>
+                                            <td>
+                                                {% if service.remoteMode == true %}
+                                                    <span class="m-badge m-badge--success"></span>
+                                                {% else %}
+                                                    <span class="m-badge m-badge--danger"></span>
+                                                {% endif %}
+                                            </td>
+                                            <td><small>{{ service.shortDescription|striptags|slice(0, 50) ~ '...' }}</small></td>
+                                            <td><small>{{ service.longDescription|striptags|slice(0, 50) ~ '...' }}</small></td>
+                                            <td>
+                                                {% if service.featured == true %}
+                                                    <span class="m-badge m-badge--success"></span>
+                                                {% else %}
+                                                    <span class="m-badge m-badge--danger"></span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Actions
+                                                    </button>
+                                                    <div class="dropdown-menu" style="position: absolute; transform: translate3d(0px, 30px, 0px); top: 0px; left: 0px; will-change: transform;" x-placement="bottom-start">
+                                                        <a class="dropdown-item" href="{{ path('admin_service_modifier', {idService: service.id}) }}"><i class="fa fa-pencil"></i> Modifier</a>
+                                                        <a class="dropdown-item" href="{{ path('admin_service_supprimer', {idService: service.id}) }}"><i class="fa fa-trash"></i> Supprimer</a>
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item" href="{{ path('admin_service_feature', {idService: service.id}) }}"><i class="fa fa-bullseye"></i> Mettre en avant</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!--end::Section-->
+                    </div>
+                    <!--end::Form-->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

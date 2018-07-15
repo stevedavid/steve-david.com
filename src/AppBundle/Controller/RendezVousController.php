@@ -221,7 +221,12 @@ class RendezVousController extends Controller
             throw new HttpException(500);
         }
 
-        $form = $this->createForm(CommandeType::class, null, [], [
+
+        $form = $this->createForm(CommandeType::class, null, [
+            'attr' => [
+//                'action' => $this->generateUrl('rendez_vous_payer'),
+            ],
+        ], [
             'isCash' => $cart->getPayment() == Cart::MODE_CASH,
         ]);
 
