@@ -118,26 +118,7 @@
 
             $('#calendar').fullCalendar({
                 allDaySlot: false,
-                events: [{
-                    draggable: false,
-                    title: 'Non disponible',
-                    type: 'unavailable',
-                    overlap: false,
-                    dow: [1, 2, 3, 4, 5],
-                    startEditable: false,
-                    start: '08:00:00',
-                    end: '19:00:00',
-                    color: '#ecd5bb',
-                    textColor: '#444',
-                    exceptWithin: [
-                    {% for slot in slots %}
-                        {
-                            start: moment('{{ slot.date|date('Y-m-d') }} 00:00','YYYY-MM-DD H:i'),
-                            end: moment('{{ slot.date|date('Y-m-d') }} 23:59','YYYY-MM-DD H:i'),
-                        },
-                    {% endfor %}
-                    ]
-                },
+                events: [
                 {% for slot in unavailable_slots %}
                 {
                     start: moment('{{ slot.appointment|date('Y-m-d H:i') }}','YYYY-MM-DD H:i'),
