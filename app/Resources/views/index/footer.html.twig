@@ -10,7 +10,7 @@
 
                 <div class="widget clearfix">
 
-                    <img src="{{ asset('images/logo-footer.png') }}" alt="" class="footer-logo">
+                    <img src="{{ asset('images/logo_footer.png') }}" alt="" class="footer-logo">
 
 
                     <div style="background: url('{{ asset('images/world-map.png') }}') no-repeat center center; background-size: 100%;">
@@ -42,20 +42,23 @@
 
             </div>
 
-            <div class="col_one_third col_last">
+            <div class="col_two_third col_last">
 
                 <div class="widget clearfix">
-                    <h4>3 services <br/> « au hasard »</h4>
+                    <h4 style="font-size: 18px;">3 services « au hasard »</h4>
 
                     <div id="post-list-footer">
                         {% for service in services %}
                             <div class="spost clearfix">
                                 <div class="entry-c">
                                     <div class="entry-title">
-                                        <h4><a href="{{ path('service_index', {slugCategory: service.category.slug, slugService: service.slug}) }}">{{ service.name }}</a></h4>
+                                        <h4>
+                                            &bull; <a href="{{ path('service_index', {slugCategory: service.category.slug, slugService: service.slug}) }}">{{ service.name }}</a>
+                                            <small>{{ service.category.name }}</small>
+                                        </h4>
                                     </div>
                                     <ul class="entry-meta">
-                                        <li>{{ service.category.name }}</li>
+                                        <li>{{ service.shortDescription|split(0, 150)[0]|striptags ~ '...'}}</li>
                                     </ul>
                                 </div>
                             </div>

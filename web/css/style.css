@@ -1044,7 +1044,7 @@ body.stretched #header.full-header .container {
 
 .header-extras {
 	float: right;
-	margin: 30px 0 0;
+	margin: 55px 0 0;
 }
 
 .header-extras li {
@@ -1988,7 +1988,7 @@ body:not(.device-sm):not(.device-xs):not(.device-xxs) #header.transparent-header
 #header,
 #header-wrap,
 #logo img {
-	height: 100px;
+	height: 130px;
 	-webkit-transition: height .4s ease, opacity .3s ease;
 	-o-transition: height .4s ease, opacity .3s ease;
 	transition: height .4s ease, opacity .3s ease;
@@ -1996,7 +1996,7 @@ body:not(.device-sm):not(.device-xs):not(.device-xxs) #header.transparent-header
 
 #header.sticky-style-2 { height: 161px; }
 
-#header.sticky-style-3 { height: 181px; }
+#header.sticky-style-3 { height: 211px; }
 
 #header.sticky-style-2 #header-wrap { height: 60px; }
 
